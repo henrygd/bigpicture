@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+  <title>BigPicture Example Page</title>
+  <link href="http://overpass-30e2.kxcdn.com/overpass.css" rel="stylesheet">
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/main.min.css">
+  <!-- endinject -->
+</head>
+<body>
+  <div class="main">
+    <div class="header">
+      <div class="logo"><img src="img/bp.svg" alt="BigPicture" title="BigPicture"></div>
+      <p>Lightweight &amp; framework independent JavaScript image / video viewer</p>
+      <a class="github" href="https://github.com/henrygd/bigpicture">View on Github</a>
+    </div>
+
+    <div id="image_container" class="container">
+      <h3>Remote Images</h3>
+      <p>Click thumbnails to load larger images. Loading spinner &amp; captions are built-in.</p>
+      <div class="flex">
+        <img src="img/photo1_thumb.jpg"/>
+        <img src="img/photo7_thumb.jpg"/>
+        <img src="img/photo2_thumb.jpg" caption="Example of an optional caption. You can put words here."/>
+        <img src="img/photo3_thumb.jpg"/>
+      </div>
+    </div>
+
+    <div id="video_container" class="container">
+      <h3>Videos</h3>
+      <p>Supports Youtube, Vimeo, and direct links. The popup can be triggered by any element. For example, <span class="text-trigger htmlvid" vidSrc="videos/panda.mp4">click here</span> for a sneezing panda</p>
+      <div class="flex">
+        <div class="vid htmlvid" style="background-image:url(img/vid_towers.jpg)" vidSrc="videos/towers.mp4"></div>
+        <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)" ytSrc="tU1b1H2EWU4"></div>
+        <div class="vid youtube" style="background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)" ytSrc="rTi9FKuMNKQ"></div>
+        <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/z_PeaHVcohg/mqdefault.jpg)" ytSrc="z_PeaHVcohg"></div>
+        <div class="vid vimeo" style="background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)" vimeoSrc="119287310"></div>
+        <div class="vid vimeo" style="background-image:url(https://i.vimeocdn.com/video/554831823_350x200.jpg)" vimeoSrc="154174852"></div>
+      </div>
+    </div>
+
+    <div id="local_image_container" class="container">
+      <h3>Local Images</h3>
+      <p>Normal image elements resized with css</p>
+      <div class="flex">
+        <img src="img/background3.jpg"/>
+        <img src="img/background4.jpg" caption="Another optional caption."/>
+        <img src="img/background6.jpg"/>
+      </div>
+      <p>Elements with background-images. Script extracts the image automatically.</p>
+      <div id="background_images" class="flex">
+        <div class="background-image" style="background-image:url(img/background2.jpg)"></div>
+        <div class="background-image" style="background-image:url(img/background5.jpg)"></div>
+        <div class="background-image" style="background-image:url(img/background1.jpg)" caption="You can use captions with any kind of element."></div>
+      </div>
+    </div>
+
+    <div class="container broken-container">
+      <h3>Broken Links</h3>
+      <p>If your remote image or video cannot be found, the user will receive an alert.</p>
+      <div class="flex">
+        <img id="broken_image" src="img/broken_thumb.jpg" caption="This link is broken, but image and caption are still displayed."/>
+        <!-- <img id="broken_vid" src="img/vid_towers.jpg" class="html-vid" vidSrc="videos/nothere.mp4"/> -->
+        <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em" vidSrc="videos/nothere.mp4"></div>
+      </div>
+    </div>
+    
+    <div class="credit">
+      <p>All images found at <a href="https://unsplash.com/">Unsplash</a>  |  "Towers of Pfeiffer" video by <a href="https://vimeo.com/ghpvisuals">Grant Porter</a> (CC-BY)</p>
+    </div>
+  </div> 
+
+<!-- inject:js -->
+<script src="js/BigPicture.js"></script>
+<!-- endinject -->
+
+<script>
+  (function() {
+
+    function getEls(query) {
+      return document.querySelectorAll(query);
+    }
+    function assignClick(elems, fn) {
+      var length = elems.length;
+      for (var i = 0; i < length; i++) {
+        elems[i].onclick = fn;
+      }
+    }
+
+    var images = getEls('#local_image_container img'),
+        backgroundImages = getEls('#background_images div'),
+        remoteImages = getEls('#image_container img'),
+        remoteVideos = getEls('#video_container .htmlvid'),
+        youtubeVideos = getEls('#video_container .youtube'),
+        vimeoVideos = getEls('#video_container .vimeo'),
+        brokenImage = document.getElementById('broken_image'),
+        brokenVid = document.getElementById('broken_vid');
+
+    assignClick(images, BigPicImage);
+    assignClick(backgroundImages, BigPicImage);
+    assignClick(remoteImages, BigPicRemoteImage);
+    assignClick(remoteVideos, BigPicRemoteVideo);
+    assignClick(youtubeVideos, BigPicYoutube);
+    assignClick(vimeoVideos, BigPicVimeo);
+
+    brokenImage.onclick = BigPicBrokenImage;
+    brokenVid.onclick = BigPicBrokenVid;
+
+    function BigPicImage(){
+      BigPicture({
+        el: this
+      });
+    }
+    function BigPicRemoteVideo(){
+      BigPicture({
+        el: this,
+        vidSrc: this.getAttribute('vidSrc')
+      });
+    }
+    function BigPicYoutube(){
+      BigPicture({
+        el: this,
+        ytSrc: this.getAttribute('ytSrc')
+      });
+    }
+    function BigPicVimeo(){
+      BigPicture({
+        el: this,
+        vimeoSrc: this.getAttribute('vimeoSrc')
+      });
+    }
+    function BigPicRemoteImage(){
+      BigPicture({
+        el: this,
+        imgSrc: this.src.replace('_thumb', '')
+      });
+    }
+    function BigPicBrokenImage(){
+      BigPicture({
+        el: this,
+        imgSrc: '//example.com/nopic.jpg'
+      });
+    }
+    function BigPicBrokenVid(){
+      BigPicture({
+        el: this,
+        vidSrc: '//example.com/novid.mp4'
+      });
+    }
+
+  })();
+</script>
+
+</body>
+</html>
