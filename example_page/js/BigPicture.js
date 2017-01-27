@@ -158,32 +158,32 @@
     displayVideo.autoplay = true;
     displayVideo.controls = true;
     displayVideo.loop = true;
-    
+
     // create caption elements
     caption = doc[createEl]('DIV');
     caption.id = 'bp_caption';
     caption[htmlInner] = '<div class="bp-x" id="bp_cap_x"></div>';
     captionText = doc[createEl]('SPAN');
     caption[appendEl](captionText);
-    
+
     // create loading icon element
     loadingIcon = doc[createEl]('DIV');
     loadingIcon.id = 'bp_loader';
     loadingIcon[htmlInner] = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399 399"><path d="M341 58.5C303 20.8 253 0 199.6 0 146.4 0 96.2 20.8 58.5 58.5 20.8 96.2 0 146.5 0 199.7 0 253 20.8 303.2 58.5 341c37.7 37.6 88 58.4 141.2 58.4 53.3 0 103.5-20.8 141.2-58.5 37.6-37.8 58.4-88 58.4-141.3 0-53.3-20.8-103.5-58.5-141.2zm-13 12.8c34.3 34.3 53.2 80 53.2 128.4h-41c0-77.4-63-140.4-140.5-140.4-4.6 0-9 .2-13.6.7V18.7c4.6-.4 9-.5 13.7-.5 48.5 0 94 18.8 128.4 53zM199.8 322c-67.4 0-122.2-55-122.2-122.3S132.3 77.5 199.7 77.5 322 132.3 322 199.7 267 322 199.6 322z"/></svg>';
     doc.body[appendEl](loadingIcon);
-    
+
     // create youtube / vimeo container
     displaySiteVid = doc[createEl]('DIV');
     displaySiteVid.id = 'bp_sv';
-    
+
     // create iframe to hold youtube / vimeo player
     iframeSiteVid = doc[createEl]('IFRAME');
     changeCSS(iframeSiteVid, 'border:0px;height:100%;width:100%');
     displaySiteVid[appendEl](iframeSiteVid);
-    
+
     // click bindings for open / closing of image
     container.onclick = close;
-    
+
     // display image bindings for image load and error
     displayImage.onload = open;
     displayImage.onerror = function(){
@@ -191,7 +191,7 @@
     };
 
     // resize binding to adjust loader position
-    global[listenFor]('resize', function(){ 
+    global[listenFor]('resize', function(){
       if (isLoading) showLoadingIcon();
     });
 
@@ -213,7 +213,7 @@
     var centerTop = rect.top - (container[cHeight] / 2 - rect.height / 2);
     var scaleWidth = el[cWidth] / displayElement[cWidth];
     var scaleHeight = el[cHeight] / displayElement[cHeight];
-    return 'translate3D(' + leftOffset + 'px, ' + centerTop + 
+    return 'translate3D(' + leftOffset + 'px, ' + centerTop +
       'px, 0) scale3D(' + scaleWidth + ', ' + scaleHeight + ', 0);';
   }
 
@@ -267,9 +267,7 @@
     if (isYoutube && !ytPlayer) {
       ytPlayer = new YT.Player(iframeSiteVid, {
         events: {
-          onReady: function(){
-            open();
-          }
+          onReady: open
         }
       });
     }
@@ -291,7 +289,7 @@
   function showLoadingIcon() {
     var rect = el[getBoundingRect]();
     isLoading = 1;
-    changeCSS(loadingIcon, 'display:-webkit-flex;display:flex;top:' + 
+    changeCSS(loadingIcon, 'display:-webkit-flex;display:flex;top:' +
       (rect.top + global.pageYOffset) + 'px;left:' + rect.left + 'px;height:' +
       rect.height + 'px;width:' + rect.width + 'px');
   }
@@ -317,7 +315,7 @@
     // transform displayEl to match trigger el
     changeCSS(displayElement, webkitify('transform:', getRect()));
 
-    // fade in container 
+    // fade in container
     changeCSS(container, 'opacity:1;' + pointerEventsAuto);
 
     // enlarge displayEl, fade in caption if hasCaption
@@ -346,7 +344,7 @@
   function close(e) {
     // do nothing if interaction is w/ caption
     var target = e.target;
-    if (target.id === 'bp_cap_x') 
+    if (target.id === 'bp_cap_x')
       return hideCaption();
     if (target === caption || /SPAN|VIDEO/.test(target.tagName) || isClosing)
       return;
@@ -397,6 +395,5 @@
   function webkitifyKeyframes(css) {
     return '@-webkit-' + css + '@' + css;
   }
-  
+
 })();
- 

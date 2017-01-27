@@ -2,7 +2,7 @@
 
 ![alt text](http://i.imgur.com/7T6dnN3.gif "logo")
 
-Lightweight (5 KB minified) & framework independent JavaScript image / video viewer.
+Lightweight (5 KB minified / ~2.5 KB gzip) & framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
@@ -10,13 +10,24 @@ Supports Youtube, Vimeo, and direct video links.
 
 ## Instructions
 
-The script is all that's needed -- no additional CSS file.
+Install via npm or add a script from the [dist](dist) directory to your page.
+
+```
+npm install bigpicture
+```
+
+```javascript
+var BigPicture = require('bigpicture');
+```
+
+Or with a script tag:
 
 ```html
 <script src="BigPicture.js"></script>
 ```
+The script is all that's needed -- no additional CSS file.
 
-Then pass an object to `BigPicture` containing the element from which you want the open animation to start and an optional second parameter depending on what you want to do. Examples below use `this` as the element in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
+When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `this` to refer to the element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
 
 ##### Remote image example
 

@@ -1,9 +1,8 @@
-// not on npm, this is just to manage dev dependencies
 {
-  "name": "BigPicture.js",
-  "version": "1.0.0",
-  "description": "JavaScript image and video viewer",
-  "main": "js/BigPicture.js",
+  "name": "bigpicture",
+  "version": "1.0.1",
+  "description": "Lightweight image and video viewer, supports youtube/vimeo",
+  "main": "index.js",
   "scripts": {
     "start": "gulp"
   },
@@ -15,7 +14,9 @@
     "lightbox",
     "photo",
     "image",
-    "video"
+    "video",
+    "youtube",
+    "vimeo"
   ],
   "author": "Henry Dollman <hank@henrygd.me>",
   "license": "MIT",

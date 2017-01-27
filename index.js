@@ -1,5 +1,5 @@
 // BigPicture.js | license MIT | henrygd.me/bigpicture
-(function() {
+module.exports = (function() {
   var
     // assign window object to variable
     global = window,
@@ -65,7 +65,7 @@
     timeout = global.setTimeout;
 
 
-  global.BigPicture = function(opts) {
+  var BigPicture = function(opts) {
     // store video id if youtube / vimeo video is requested
     var siteVid = opts.ytSrc || opts.vimeoSrc;
 
@@ -265,7 +265,7 @@
 
     // create youtube player if needed and doesn't yet exist
     if (isYoutube && !ytPlayer) {
-      ytPlayer = new YT.Player(iframeSiteVid, {
+      ytPlayer = new global.YT.Player(iframeSiteVid, {
         events: {
           onReady: open
         }
@@ -395,5 +395,7 @@
   function webkitifyKeyframes(css) {
     return '@-webkit-' + css + '@' + css;
   }
+
+  return BigPicture;
 
 })();
