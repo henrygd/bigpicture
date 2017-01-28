@@ -87,6 +87,10 @@ To display a caption, add a caption attribute with the desired text (or HTML) to
 <img src="yourimage.jpg" caption="Example of an optional caption."/>
 ```
 
+### Troubleshooting
+
+If the media or loading icon fails to display, it's probably a z-index issue. The media container has a default z-index of 9999, and the loading icon has a z-index of 9 relative to the trigger element's parent container.
+
 ---
 
 License: MIT

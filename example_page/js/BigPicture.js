@@ -65,7 +65,7 @@
     timeout = global.setTimeout;
 
 
-  global.BigPicture = function(opts) {
+  window.BigPicture = function(opts) {
     // store video id if youtube / vimeo video is requested
     var siteVid = opts.ytSrc || opts.vimeoSrc;
 
@@ -140,7 +140,7 @@
 
     // add style
     var style = doc[createEl]('STYLE');
-    style[htmlInner] = '#bp_caption,#bp_vid,#bp_container iframe{will-change:opacity, transform}#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_img,#bp_loader,#bp_sv,#bp_vid,.bp-x{position:absolute;right:0}#bp_container{top:0;z-index:99999;background:rgba(0, 0, 0, .7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:none;cursor:wait}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:rotate(360deg);') + '}}') + '#bp_img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0, 0, 0, .4);z-index:-1}#bp_sv{width:171vh}#bp_caption{padding:1.2em 4%;font-size:.9em;background-color:rgba(9, 9, 9, .97);color:#eee;text-align:center;transition:opacity .3s}#bp_caption .bp-x{left:2%;top:auto;bottom:100%;height:2.2em;background-color:#d74040;opacity:.8;border-radius:2px 2px 0 0}.bp-x{top:0;cursor:pointer;height:3.5em;width:3.5em;opacity:.85;background:url(data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20357%20357%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M357%2035.7L321.3%200%20178.5%20142.8%2035.7%200%200%2035.7l142.8%20142.8L0%20321.3%2035.7%20357l142.8-142.8L321.3%20357l35.7-35.7-142.8-142.8%22%2F%3E%3C%2Fsvg%3E) center center no-repeat;background-size:1.2em}.bp-x:hover{opacity:1 !important}@media (max-aspect-ratio: 9/5){#bp_sv{height:53vw}}';
+    style[htmlInner] = '#bp_caption,#bp_vid,#bp_container iframe{will-change:opacity, transform}#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_img,#bp_loader,#bp_sv,#bp_vid,.bp-x{position:absolute;right:0}#bp_container{top:0;z-index:9999;background:rgba(0, 0, 0, .7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:rotate(360deg);') + '}}') + '#bp_img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0, 0, 0, .4);z-index:-1}#bp_sv{width:171vh}#bp_caption{padding:1.2em 4%;font-size:.9em;background-color:rgba(9, 9, 9, .97);color:#eee;text-align:center;transition:opacity .3s}#bp_caption .bp-x{left:2%;top:auto;bottom:100%;height:2.2em;background-color:#d74040;opacity:.8;border-radius:2px 2px 0 0}.bp-x{top:0;cursor:pointer;height:3.5em;width:3.5em;opacity:.85;background:url(data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20357%20357%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M357%2035.7L321.3%200%20178.5%20142.8%2035.7%200%200%2035.7l142.8%20142.8L0%20321.3%2035.7%20357l142.8-142.8L321.3%20357l35.7-35.7-142.8-142.8%22%2F%3E%3C%2Fsvg%3E) center center no-repeat;background-size:1.2em}.bp-x:hover{opacity:1 !important}@media (max-aspect-ratio: 9/5){#bp_sv{height:53vw}}';
     doc.head[appendEl](style);
 
     // create container element
@@ -170,7 +170,6 @@
     loadingIcon = doc[createEl]('DIV');
     loadingIcon.id = 'bp_loader';
     loadingIcon[htmlInner] = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399 399"><path d="M341 58.5C303 20.8 253 0 199.6 0 146.4 0 96.2 20.8 58.5 58.5 20.8 96.2 0 146.5 0 199.7 0 253 20.8 303.2 58.5 341c37.7 37.6 88 58.4 141.2 58.4 53.3 0 103.5-20.8 141.2-58.5 37.6-37.8 58.4-88 58.4-141.3 0-53.3-20.8-103.5-58.5-141.2zm-13 12.8c34.3 34.3 53.2 80 53.2 128.4h-41c0-77.4-63-140.4-140.5-140.4-4.6 0-9 .2-13.6.7V18.7c4.6-.4 9-.5 13.7-.5 48.5 0 94 18.8 128.4 53zM199.8 322c-67.4 0-122.2-55-122.2-122.3S132.3 77.5 199.7 77.5 322 132.3 322 199.7 267 322 199.6 322z"/></svg>';
-    doc.body[appendEl](loadingIcon);
 
     // create youtube / vimeo container
     displaySiteVid = doc[createEl]('DIV');
@@ -265,7 +264,7 @@
 
     // create youtube player if needed and doesn't yet exist
     if (isYoutube && !ytPlayer) {
-      ytPlayer = new YT.Player(iframeSiteVid, {
+      ytPlayer = new global.YT.Player(iframeSiteVid, {
         events: {
           onReady: open
         }
@@ -287,19 +286,22 @@
 
   // show loading icon on top of trigger element
   function showLoadingIcon() {
-    var rect = el[getBoundingRect]();
+    // var rect = el[getBoundingRect]();
     isLoading = 1;
-    changeCSS(loadingIcon, 'display:-webkit-flex;display:flex;top:' +
-      (rect.top + global.pageYOffset) + 'px;left:' + rect.left + 'px;height:' +
-      rect.height + 'px;width:' + rect.width + 'px');
+    changeCSS(loadingIcon, 'top:' + el.offsetTop +
+     'px;left:' + el.offsetLeft + 'px;height:' +
+      el[cHeight] + 'px;width:' + el[cWidth] + 'px');
+    el.parentElement[appendEl](loadingIcon);
   }
 
 
   // animate open of image / video; display caption if needed
   function open(err) {
     // hide loading spinner
-    changeCSS(loadingIcon, '');
-    isLoading = 0;
+    if (isLoading) {
+      isLoading = false;
+      el.parentElement.removeChild(loadingIcon);
+    };
 
     // check if we have an error string instead of normal event
     if (typeof(err) === 'string') {
