@@ -57,7 +57,6 @@
     htmlInner = 'innerHTML',
     listenFor ='addEventListener',
     youtubeReady = 'onYouTubeIframeAPIReady',
-    getBoundingRect = 'getBoundingClientRect',
     pointerEventsAuto = 'pointer-events:auto',
     cHeight = 'clientHeight',
     cWidth = 'clientWidth',
@@ -207,7 +206,7 @@
 
   // calculate size and position of initial element relative to full size media
   function getRect() {
-    var rect = el[getBoundingRect]();
+    var rect = el.getBoundingClientRect();
     var leftOffset = rect.left - (container[cWidth] / 2 - rect.width / 2);
     var centerTop = rect.top - (container[cHeight] / 2 - rect.height / 2);
     var scaleWidth = el[cWidth] / displayElement[cWidth];
@@ -286,7 +285,6 @@
 
   // show loading icon on top of trigger element
   function showLoadingIcon() {
-    // var rect = el[getBoundingRect]();
     isLoading = 1;
     changeCSS(loadingIcon, 'top:' + el.offsetTop +
      'px;left:' + el.offsetLeft + 'px;height:' +
