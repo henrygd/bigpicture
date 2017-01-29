@@ -1,10 +1,11 @@
 {
   "name": "bigpicture",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Lightweight image and video viewer, supports youtube/vimeo",
   "main": "index.js",
   "scripts": {
-    "start": "gulp"
+    "start": "cd example_page && live-server",
+    "build": "cd example_page/js && cp BigPicture.js ../../dist && uglifyjs BigPicture.js -c -m > ../../dist/BigPicture.min.js && echo 'Please update index.js by hand'"
   },
   "repository": {
     "type": "git",
@@ -20,17 +21,11 @@
   ],
   "author": "Henry Dollman <hank@henrygd.me>",
   "license": "MIT",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "devDependencies": {
-    "autoprefixer": "^6.3.3",
-    "browser-sync": "^2.11.1",
-    "css-mqpacker": "^4.0.0",
-    "csswring": "^4.2.1",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-gh-pages": "^0.5.4",
-    "gulp-inject": "^3.0.0",
-    "gulp-postcss": "^6.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.5.1"
+    "live-server": "^1.2.0",
+    "uglify-js": "^2.7.5"
   }
 }

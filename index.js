@@ -65,7 +65,7 @@ module.exports = (function() {
     timeout = global.setTimeout;
 
 
-  BigPicture = function(opts) {
+  var BigPicture = function(opts) {
     // store video id if youtube / vimeo video is requested
     var siteVid = opts.ytSrc || opts.vimeoSrc;
 

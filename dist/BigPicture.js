@@ -65,7 +65,7 @@
     timeout = global.setTimeout;
 
 
-  window.BigPicture = function(opts) {
+  global.BigPicture = function(opts) {
     // store video id if youtube / vimeo video is requested
     var siteVid = opts.ytSrc || opts.vimeoSrc;
 
