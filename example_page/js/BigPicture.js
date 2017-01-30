@@ -33,8 +33,6 @@
     captionDisplayed,
     // caption text content
     captionText,
-    // timeout to check video status while loading
-    checkVidTimeout,
     // used during close animation to avoid triggering timeout twice
     isClosing,
     // array of prev viewed image urls to check if cached before showing loading icon
@@ -60,7 +58,6 @@
     pointerEventsAuto = 'pointer-events:auto',
     cHeight = 'clientHeight',
     cWidth = 'clientWidth',
-    wipeTimeout = global.clearTimeout,
     timeout = global.setTimeout;
 
 
@@ -69,11 +66,11 @@
     var siteVid = opts.ytSrc || opts.vimeoSrc;
 
     // called on initial open to create elements / style / add event handlers
-    if (!initialized) initialize();
+    !initialized && initialize();
 
     // clear currently loading stuff
     if (isLoading) {
-      wipeTimeout(checkVidTimeout);
+      hideLoadingIcon();
       removeContainer();
     }
 
@@ -95,40 +92,32 @@
     if (siteVid) {
       siteVidID = siteVid;
       displayElement = displaySiteVid;
-      appendContainer();
       getSiteVid(!!opts.ytSrc);
     }
-
     // if remote image
     else if (opts.imgSrc) {
       remoteImage = true;
       imgSrc = opts.imgSrc;
       cached = ~imgCache.indexOf(imgSrc);
-      if (!cached) {
-        showLoadingIcon();
-      }
+      !cached && showLoadingIcon();
       displayElement = displayImage;
       displayElement.src = imgSrc;
-      appendContainer();
     }
-
     // if direct video link
     else if (opts.vidSrc) {
       showLoadingIcon();
       displayElement = displayVideo;
       displayElement.src = opts.vidSrc;
-      appendContainer();
-      checkVid();
     }
-
     // local image / background image already loaded on page
     else {
       displayElement = displayImage;
       // get img source or element background image
       displayElement.src = el.tagName === 'IMG' ? el.src :
         el.style.backgroundImage.replace(/^url|[\(|\)|'|"]/g, '');
-      appendContainer();
     }
+    // add container to page
+    appendContainer();
   };
 
 
@@ -157,6 +146,10 @@
     displayVideo.autoplay = true;
     displayVideo.controls = true;
     displayVideo.loop = true;
+    displayVideo[listenFor]('loadeddata', open);
+    displayVideo.onerror = function() {
+      open('video');
+    };
 
     // create caption elements
     caption = doc[createEl]('DIV');
@@ -185,13 +178,13 @@
 
     // display image bindings for image load and error
     displayImage.onload = open;
-    displayImage.onerror = function(){
+    displayImage.onerror = function() {
       open('image');
     };
 
     // resize binding to adjust loader position
-    global[listenFor]('resize', function(){
-      if (isLoading) showLoadingIcon();
+    global[listenFor]('resize', function() {
+      isLoading && showLoadingIcon();
     });
 
     // all done
@@ -204,6 +197,7 @@
     container[appendEl](displayElement);
     doc.body[appendEl](container);
   }
+
 
   // return transform style to make full size display el match trigger el size
   function getRect() {
@@ -221,12 +215,13 @@
   function getSiteVid(isYoutube) {
     // isYoutube === true if youtube, false if vimeo
     showLoadingIcon();
-    if (isYoutube && !global[youtubeReady])
+    if (isYoutube && !global[youtubeReady]) {
       youtubeInit();
-    else if (!isYoutube && !vimeoOnReady)
+    } else if (!isYoutube && !vimeoOnReady) {
       vimeoInit();
-    else
+    } else {
       createIframe(isYoutube);
+    }
   }
 
 
@@ -244,7 +239,7 @@
   // set ready function for vimeo on first vimeo request
   function vimeoInit() {
     vimeoOnReady = function(e) {
-      if (/vimeo/.test(e.origin) && JSON.parse(e.data).event === 'ready'){
+      if (/vimeo/.test(e.origin) && JSON.parse(e.data).event === 'ready') {
         open();
       }
     };
@@ -273,20 +268,9 @@
   }
 
 
-  // timeout to continuously check video status while loading
-  function checkVid() {
-    if (displayElement.readyState === 4)
-      open();
-    else if (displayVideo.error)
-      open('video');
-    else
-      checkVidTimeout = timeout(checkVid, 35);
-  }
-
-
   // show loading icon on top of trigger element
   function showLoadingIcon() {
-    isLoading = 1;
+    isLoading = true;
     changeCSS(loadingIcon, 'top:' + el.offsetTop +
      'px;left:' + el.offsetLeft + 'px;height:' +
       el[cHeight] + 'px;width:' + el[cWidth] + 'px');
@@ -294,13 +278,17 @@
   }
 
 
+  // hide loading icon
+  function hideLoadingIcon() {
+    isLoading = false;
+    el.parentElement.removeChild(loadingIcon);
+  }
+
+
   // animate open of image / video; display caption if needed
   function open(err) {
     // hide loading spinner
-    if (isLoading) {
-      isLoading = false;
-      el.parentElement.removeChild(loadingIcon);
-    };
+    isLoading && hideLoadingIcon();
 
     // check if we have an error string instead of normal event
     if (typeof(err) === 'string') {
@@ -334,7 +322,7 @@
   // hide caption
   function hideCaption() {
     changeCSS(caption, pointerEventsAuto);
-    timeout(function(){
+    timeout(function() {
       container[removeEl](caption);
       captionDisplayed = false;
     }, 250);
@@ -345,10 +333,12 @@
   function close(e) {
     // do nothing if interaction is w/ caption
     var target = e.target;
-    if (target.id === 'bp_cap_x')
+    if (target.id === 'bp_cap_x') {
       return hideCaption();
-    if (target === caption || /SPAN|VIDEO/.test(target.tagName) || isClosing)
+    }
+    if (target === caption || /SPAN|VIDEO/.test(target.tagName) || isClosing) {
       return;
+    }
 
     // animate closing
     displayElement.style.cssText += getRect();
@@ -368,11 +358,10 @@
     changeCSS(container, '');
     changeCSS(displayElement, '');
 
-    // clear src of video / iframe elements
-    if (displayElement === displayVideo)
-      displayVideo.src = '';
-    else if (displayElement === displaySiteVid)
-      iframeSiteVid.src = '';
+    // clear src of displayElement
+    displayElement.removeAttribute('src');
+    // call load method on video to stop existing download
+    displayElement === displayVideo && displayVideo.load();
 
     // remove caption
     if (captionDisplayed) {
