@@ -41,8 +41,6 @@
     cached,
     // store whether image requested is remote or local
     remoteImage,
-    // stores function for vimeo onReady playback
-    vimeoOnReady,
     // youtube player object
     ytPlayer,
     // holds caption shown state
@@ -53,7 +51,6 @@
     createEl = 'createElement',
     removeEl = 'removeChild',
     htmlInner = 'innerHTML',
-    listenFor ='addEventListener',
     youtubeReady = 'onYouTubeIframeAPIReady',
     pointerEventsAuto = 'pointer-events:auto',
     cHeight = 'clientHeight',
@@ -116,8 +113,10 @@
       displayElement.src = el.tagName === 'IMG' ? el.src :
         el.style.backgroundImage.replace(/^url|[\(|\)|'|"]/g, '');
     }
+
     // add container to page
-    appendContainer();
+    container[appendEl](displayElement);
+    doc.body[appendEl](container);
   };
 
 
@@ -146,7 +145,7 @@
     displayVideo.autoplay = true;
     displayVideo.controls = true;
     displayVideo.loop = true;
-    displayVideo[listenFor]('loadeddata', open);
+    displayVideo.onloadeddata = open;
     displayVideo.onerror = function() {
       open('video');
     };
@@ -170,6 +169,10 @@
     // create iframe to hold youtube / vimeo player
     iframeSiteVid = doc[createEl]('IFRAME');
     iframeSiteVid.allowFullscreen = true;
+    iframeSiteVid.onload = function() {
+      // open directly if vimeo, let youtube player handle open if youtube
+      /vimeo/.test(this.src) && open();
+    };
     changeCSS(iframeSiteVid, 'border:0px;height:100%;width:100%');
     displaySiteVid[appendEl](iframeSiteVid);
 
@@ -182,20 +185,13 @@
       open('image');
     };
 
-    // resize binding to adjust loader position
-    global[listenFor]('resize', function() {
+    // adjust loader position on window resize
+    global.addEventListener('resize', function() {
       isLoading && showLoadingIcon();
     });
 
     // all done
     initialized = true;
-  }
-
-
-  // add the container / display element to the DOM before each open
-  function appendContainer() {
-    container[appendEl](displayElement);
-    doc.body[appendEl](container);
   }
 
 
@@ -217,8 +213,6 @@
     showLoadingIcon();
     if (isYoutube && !global[youtubeReady]) {
       youtubeInit();
-    } else if (!isYoutube && !vimeoOnReady) {
-      vimeoInit();
     } else {
       createIframe(isYoutube);
     }
@@ -236,22 +230,11 @@
   }
 
 
-  // set ready function for vimeo on first vimeo request
-  function vimeoInit() {
-    vimeoOnReady = function(e) {
-      if (/vimeo/.test(e.origin) && JSON.parse(e.data).event === 'ready') {
-        open();
-      }
-    };
-    global[listenFor]('message', vimeoOnReady);
-    createIframe();
-  }
-
-
   // create youtube / vimeo video iframe
   function createIframe(isYoutube) {
     // create appropriate url for youtube or vimeo
-    var url = isYoutube ? 'www.youtube.com/embed/' + siteVidID + '?enablejsapi=1&html5=1&rel=0&showinfo=0&' :
+    var url = isYoutube ?
+      'www.youtube.com/embed/' + siteVidID + '?enablejsapi=1&html5=1&rel=0&showinfo=0&' :
       'player.vimeo.com/video/' + siteVidID + '?';
 
     // set iframe src to url
@@ -281,7 +264,7 @@
   // hide loading icon
   function hideLoadingIcon() {
     isLoading = false;
-    el.parentElement.removeChild(loadingIcon);
+    el.parentElement[removeEl](loadingIcon);
   }
 
 
@@ -358,8 +341,10 @@
     changeCSS(container, '');
     changeCSS(displayElement, '');
 
-    // clear src of displayElement
-    displayElement.removeAttribute('src');
+    // clear src of displayElement (or iframe if display el is iframe container)
+    (displayElement === displaySiteVid ? iframeSiteVid : displayElement)
+      .removeAttribute('src');
+      
     // call load method on video to stop existing download
     displayElement === displayVideo && displayVideo.load();
 

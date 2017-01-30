@@ -59,12 +59,16 @@
     </div>
 
     <div class="container broken-container">
-      <h3>Broken Links</h3>
-      <p>If your remote image or video cannot be found, the user will receive an alert.</p>
+      <h3>Error Handling</h3>
+      <p>If your remote link is 404, or the display element throws an error, the user will receive an alert.</p>
       <div class="flex">
         <img id="broken_image" src="img/broken_thumb.jpg" caption="This link is broken, but image and caption are still displayed."/>
-        <!-- <img id="broken_vid" src="img/vid_towers.jpg" class="html-vid" vidSrc="videos/nothere.mp4"/> -->
-        <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em" vidSrc="videos/nothere.mp4"></div>
+        <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em"></div>
+      </div>
+      <p>If the vimeo / youtube URL is incorrect, the embed is shown with the error.</p>
+      <div class="flex">
+        <div class="vid youtube" style="width:480px;background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)" ytSrc="ldkfjgdgf"></div>
+        <div class="vid vimeo" style="width:480px;background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)" vimeoSrc="ldkfjgdgf"></div>
       </div>
     </div>
 
@@ -94,8 +98,8 @@
         backgroundImages = getEls('#background_images div'),
         remoteImages = getEls('#image_container img'),
         remoteVideos = getEls('#video_container .htmlvid'),
-        youtubeVideos = getEls('#video_container .youtube'),
-        vimeoVideos = getEls('#video_container .vimeo'),
+        youtubeVideos = getEls('.youtube'),
+        vimeoVideos = getEls('.vimeo'),
         brokenImage = document.getElementById('broken_image'),
         brokenVid = document.getElementById('broken_vid');
 
@@ -141,13 +145,13 @@
     function BigPicBrokenImage(){
       BigPicture({
         el: this,
-        imgSrc: '//example.com/nopic.jpg'
+        imgSrc: '/nopic.jpg'
       });
     }
     function BigPicBrokenVid(){
       BigPicture({
         el: this,
-        vidSrc: '//example.com/novid.mp4'
+        vidSrc: '/novid.mp4'
       });
     }
 

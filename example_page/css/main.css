@@ -221,6 +221,10 @@ img {
   text-decoration: underline;
 }
 
+#bp_loader {
+  box-shadow: none;
+}
+
 @media all and (max-width: 1076px) {
   #broken_vid {
     height: auto;

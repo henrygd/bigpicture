@@ -1,11 +1,11 @@
 {
   "name": "bigpicture",
-  "version": "1.1.3",
-  "description": "Lightweight image and video viewer, supports youtube/vimeo",
+  "version": "1.1.6",
+  "description": "Super lightweight image and video viewer, supports youtube/vimeo",
   "main": "index.js",
   "scripts": {
     "start": "cd example_page && live-server",
-    "build": "cd example_page/js && cp BigPicture.js ../../dist && uglifyjs BigPicture.js -c -m > ../../dist/BigPicture.min.js && echo 'Please update index.js by hand'"
+    "build": "./build.sh"
   },
   "repository": {
     "type": "git",
