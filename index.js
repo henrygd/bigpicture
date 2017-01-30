@@ -176,6 +176,7 @@ module.exports = (function() {
 
     // create iframe to hold youtube / vimeo player
     iframeSiteVid = doc[createEl]('IFRAME');
+    iframeSiteVid.allowFullscreen = true;
     changeCSS(iframeSiteVid, 'border:0px;height:100%;width:100%');
     displaySiteVid[appendEl](iframeSiteVid);
 
@@ -204,15 +205,15 @@ module.exports = (function() {
     doc.body[appendEl](container);
   }
 
-  // calculate size and position of initial element relative to full size media
+  // return transform style to make full size display el match trigger el size
   function getRect() {
     var rect = el.getBoundingClientRect();
-    var leftOffset = rect.left - (container[cWidth] / 2 - rect.width / 2);
-    var centerTop = rect.top - (container[cHeight] / 2 - rect.height / 2);
+    var leftOffset = rect.left - (container[cWidth] - rect.width) / 2;
+    var centerTop = rect.top - (container[cHeight] - rect.height) / 2;
     var scaleWidth = el[cWidth] / displayElement[cWidth];
     var scaleHeight = el[cHeight] / displayElement[cHeight];
-    return 'translate3D(' + leftOffset + 'px, ' + centerTop +
-      'px, 0) scale3D(' + scaleWidth + ', ' + scaleHeight + ', 0);';
+    return webkitify('transform:', 'translate3D(' + leftOffset + 'px, ' +
+      centerTop + 'px, 0) scale3D(' + scaleWidth + ', ' + scaleHeight + ', 0);');
   }
 
 
@@ -285,7 +286,6 @@ module.exports = (function() {
 
   // show loading icon on top of trigger element
   function showLoadingIcon() {
-    // var rect = el[getBoundingRect]();
     isLoading = 1;
     changeCSS(loadingIcon, 'top:' + el.offsetTop +
      'px;left:' + el.offsetLeft + 'px;height:' +
@@ -314,7 +314,7 @@ module.exports = (function() {
     }
 
     // transform displayEl to match trigger el
-    changeCSS(displayElement, webkitify('transform:', getRect()));
+    changeCSS(displayElement, getRect());
 
     // fade in container
     changeCSS(container, 'opacity:1;' + pointerEventsAuto);
@@ -351,7 +351,7 @@ module.exports = (function() {
       return;
 
     // animate closing
-    displayElement.style.cssText += webkitify('transform:', getRect());
+    displayElement.style.cssText += getRect();
     changeCSS(container, pointerEventsAuto);
 
     // timeout to remove els from dom; use variable to avoid calling more than once
