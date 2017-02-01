@@ -25,6 +25,8 @@
     siteVidID,
     // keeps track of loading icon display state
     isLoading,
+    // timeout to check video status while loading
+    checkVidTimeout,
     // loading icon element
     loadingIcon,
     // caption element
@@ -33,6 +35,8 @@
     captionDisplayed,
     // caption text content
     captionText,
+    // hide caption button element
+    captionHideButton,
     // used during close animation to avoid triggering timeout twice
     isClosing,
     // array of prev viewed image urls to check if cached before showing loading icon
@@ -41,8 +45,6 @@
     cached,
     // store whether image requested is remote or local
     remoteImage,
-    // youtube player object
-    ytPlayer,
     // holds caption shown state
     hasCaption,
     // Save bytes in the minified version
@@ -51,7 +53,6 @@
     createEl = 'createElement',
     removeEl = 'removeChild',
     htmlInner = 'innerHTML',
-    youtubeReady = 'onYouTubeIframeAPIReady',
     pointerEventsAuto = 'pointer-events:auto',
     cHeight = 'clientHeight',
     cWidth = 'clientWidth',
@@ -67,6 +68,7 @@
 
     // clear currently loading stuff
     if (isLoading) {
+      global.clearTimeout(checkVidTimeout);
       hideLoadingIcon();
       removeContainer();
     }
@@ -87,9 +89,10 @@
 
     // if vimeo or youtube video
     if (siteVid) {
+      showLoadingIcon();
       siteVidID = siteVid;
       displayElement = displaySiteVid;
-      getSiteVid(!!opts.ytSrc);
+      createIframe(!!opts.ytSrc);
     }
     // if remote image
     else if (opts.imgSrc) {
@@ -105,13 +108,14 @@
       showLoadingIcon();
       displayElement = displayVideo;
       displayElement.src = opts.vidSrc;
+      checkVid();
     }
     // local image / background image already loaded on page
     else {
       displayElement = displayImage;
       // get img source or element background image
       displayElement.src = el.tagName === 'IMG' ? el.src :
-        el.style.backgroundImage.replace(/^url|[\(|\)|'|"]/g, '');
+        global.getComputedStyle(el).backgroundImage.replace(/^url|[\(|\)|'|"]/g, '');
     }
 
     // add container to page
@@ -122,18 +126,28 @@
 
   // create all needed methods / store dom elements on first use
   function initialize() {
+
+    // return close button elements (divs to avoid default button styles)
+    function createCloseButton() {
+      var el = doc[createEl]('DIV');
+      el.className = 'bp-x';
+      el[htmlInner] = '&#215;'
+      return el;
+    }
+
     // imgCache holds displayed image urls to prevent loader on cached images
     imgCache = [];
 
     // add style
     var style = doc[createEl]('STYLE');
-    style[htmlInner] = '#bp_caption,#bp_vid,#bp_container iframe{will-change:opacity, transform}#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_img,#bp_loader,#bp_sv,#bp_vid,.bp-x{position:absolute;right:0}#bp_container{top:0;z-index:9999;background:rgba(0, 0, 0, .7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:', 'rotate(360deg);') + '}}') + '#bp_img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0, 0, 0, .4);z-index:-1}#bp_sv{width:171vh}#bp_caption{padding:1.2em 4%;font-size:.9em;background-color:rgba(9, 9, 9, .97);color:#eee;text-align:center;transition:opacity .3s}#bp_caption .bp-x{left:2%;top:auto;bottom:100%;height:2.2em;background-color:#d74040;opacity:.8;border-radius:2px 2px 0 0}.bp-x{top:0;cursor:pointer;height:3.5em;width:3.5em;opacity:.85;background:url(data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20357%20357%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M357%2035.7L321.3%200%20178.5%20142.8%2035.7%200%200%2035.7l142.8%20142.8L0%20321.3%2035.7%20357l142.8-142.8L321.3%20357l35.7-35.7-142.8-142.8%22%2F%3E%3C%2Fsvg%3E) center center no-repeat;background-size:1.2em}.bp-x:hover{opacity:1 !important}@media (max-aspect-ratio: 9/5){#bp_sv{height:53vw}}';
+    style[htmlInner] = '#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,.bp-x,#bp_loader{position:absolute;right:0}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:', 'rotate(360deg);') + '}}') + '#bp_img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{width:171vh}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(20,20,20,.97);color:#fff;text-align:center;transition:opacity .3s}.bp-x{font-family:Arial;top:0;cursor:pointer;opacity:.85;font-size:3em;padding:0 3vh;color:#fff}#bp_caption .bp-x{left:2%;top:auto;right:auto;bottom:100%;padding:0 .6em;background:#d74040;border-radius:2px 2px 0 0;font-size:2.3em}.bp-x:hover{opacity:1}@media (max-aspect-ratio:9/5){#bp_sv{height:53vw}}';
     doc.head[appendEl](style);
 
     // create container element
     container =  doc[createEl]('DIV');
     container.id = 'bp_container';
-    container[htmlInner] = '<div class="bp-x"></div>';
+    container.onclick = close;
+    container[appendEl](createCloseButton());
 
     // create display image element
     displayImage = doc[createEl]('IMG');
@@ -145,15 +159,13 @@
     displayVideo.autoplay = true;
     displayVideo.controls = true;
     displayVideo.loop = true;
-    displayVideo.onloadeddata = open;
-    displayVideo.onerror = function() {
-      open('video');
-    };
 
     // create caption elements
     caption = doc[createEl]('DIV');
     caption.id = 'bp_caption';
-    caption[htmlInner] = '<div class="bp-x" id="bp_cap_x"></div>';
+    captionHideButton = createCloseButton();
+    captionHideButton.onclick = hideCaption;
+    caption[appendEl](captionHideButton);
     captionText = doc[createEl]('SPAN');
     caption[appendEl](captionText);
 
@@ -169,15 +181,9 @@
     // create iframe to hold youtube / vimeo player
     iframeSiteVid = doc[createEl]('IFRAME');
     iframeSiteVid.allowFullscreen = true;
-    iframeSiteVid.onload = function() {
-      // open directly if vimeo, let youtube player handle open if youtube
-      /vimeo/.test(this.src) && open();
-    };
+    iframeSiteVid.onload = open;
     changeCSS(iframeSiteVid, 'border:0px;height:100%;width:100%');
     displaySiteVid[appendEl](iframeSiteVid);
-
-    // click bindings for open / closing of image
-    container.onclick = close;
 
     // display image bindings for image load and error
     displayImage.onload = open;
@@ -207,29 +213,6 @@
   }
 
 
-  // route to appropriate methods to load & play youtube / vimeo videos
-  function getSiteVid(isYoutube) {
-    // isYoutube === true if youtube, false if vimeo
-    showLoadingIcon();
-    if (isYoutube && !global[youtubeReady]) {
-      youtubeInit();
-    } else {
-      createIframe(isYoutube);
-    }
-  }
-
-
-  // load youtube's iframe player script on first youtube request
-  function youtubeInit() {
-    global[youtubeReady] = function() {
-      createIframe(true);
-    };
-    var tag = doc[createEl]('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    doc.body[appendEl](tag);
-  }
-
-
   // create youtube / vimeo video iframe
   function createIframe(isYoutube) {
     // create appropriate url for youtube or vimeo
@@ -239,15 +222,17 @@
 
     // set iframe src to url
     iframeSiteVid.src = 'https://' + url + 'autoplay=1';
+  }
 
-    // create youtube player if needed and doesn't yet exist
-    if (isYoutube && !ytPlayer) {
-      ytPlayer = new global.YT.Player(iframeSiteVid, {
-        events: {
-          onReady: open
-        }
-      });
-    }
+  // timeout to check video status while loading
+  // onloadeddata event doesn't seem to fire in less up-to-date browsers like midori & epiphany
+  function checkVid() {
+    if (displayElement.readyState === 4)
+      open();
+    else if (displayVideo.error)
+      open('video');
+    else
+      checkVidTimeout = timeout(checkVid, 40);
   }
 
 
@@ -314,12 +299,12 @@
 
   // close active display element
   function close(e) {
-    // do nothing if interaction is w/ caption
+    // don't close if caption or video was clicked
     var target = e.target;
-    if (target.id === 'bp_cap_x') {
-      return hideCaption();
-    }
-    if (target === caption || /SPAN|VIDEO/.test(target.tagName) || isClosing) {
+    if (target === caption
+      || target === captionHideButton
+      || /SPAN|VIDEO/.test(target.tagName)
+      || isClosing) {
       return;
     }
 
@@ -344,9 +329,6 @@
     // clear src of displayElement (or iframe if display el is iframe container)
     (displayElement === displaySiteVid ? iframeSiteVid : displayElement)
       .removeAttribute('src');
-
-    // call load method on video to stop existing download
-    displayElement === displayVideo && displayVideo.load();
 
     // remove caption
     if (captionDisplayed) {

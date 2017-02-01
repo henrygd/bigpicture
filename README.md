@@ -2,7 +2,7 @@
 
 ![alt text](http://i.imgur.com/7T6dnN3.gif "logo")
 
-Lightweight (~2.5 KB minified/gzip) & framework independent JavaScript image / video viewer.
+Super lightweight (just over 4 KB minified, 2 KB gzip) and framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
