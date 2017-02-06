@@ -58,17 +58,17 @@
       </div>
     </div>
 
-    <div class="container broken-container">
+    <div class="container" id="broken_container">
       <h3>Error Handling</h3>
       <p>If your remote link is 404, or the display element throws an error, the user will receive an alert.</p>
       <div class="flex">
-        <img id="broken_image" src="img/broken_thumb.jpg" caption="This link is broken, but image and caption are still displayed."/>
+        <img id="broken_image" src="img/broken_thumb.jpg"/>
         <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em"></div>
       </div>
       <p>If the vimeo / youtube URL is incorrect, the embed is shown with the error.</p>
       <div class="flex">
-        <div class="vid youtube" style="width:480px;background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)" ytSrc="ldkfjgdgf"></div>
-        <div class="vid vimeo" style="width:480px;background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)" vimeoSrc="ldkfjgdgf"></div>
+        <div class="vid youtube" style="width:480px;background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)"></div>
+        <div class="vid vimeo" style="width:480px;background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)"></div>
       </div>
     </div>
 
@@ -84,76 +84,65 @@
 <script>
   (function() {
 
-    function getEls(query) {
-      return document.querySelectorAll(query);
-    }
-    function assignClick(elems, fn) {
-      var length = elems.length;
-      for (var i = 0; i < length; i++) {
-        elems[i].onclick = fn;
-      }
+    function setClickHandler(id, fn) {
+      document.getElementById(id).onclick = fn;
     }
 
-    var images = getEls('#local_image_container img'),
-        backgroundImages = getEls('#background_images div'),
-        remoteImages = getEls('#image_container img'),
-        remoteVideos = getEls('#video_container .htmlvid'),
-        youtubeVideos = getEls('.youtube'),
-        vimeoVideos = getEls('.vimeo'),
-        brokenImage = document.getElementById('broken_image'),
-        brokenVid = document.getElementById('broken_vid');
+    setClickHandler('image_container', function(e) {
+      e.target.tagName === 'IMG' && BigPicture({
+        el: e.target,
+        imgSrc: e.target.src.replace('_thumb', '')
+      });
+    });
 
-    assignClick(images, BigPicImage);
-    assignClick(backgroundImages, BigPicImage);
-    assignClick(remoteImages, BigPicRemoteImage);
-    assignClick(remoteVideos, BigPicRemoteVideo);
-    assignClick(youtubeVideos, BigPicYoutube);
-    assignClick(vimeoVideos, BigPicVimeo);
+    setClickHandler('local_image_container', function(e) {
+      (e.target.tagName === 'IMG' || e.target.className === 'background-image') &&
+        BigPicture({
+          el: e.target
+        });
+    });
 
-    brokenImage.onclick = BigPicBrokenImage;
-    brokenVid.onclick = BigPicBrokenVid;
+    setClickHandler('video_container', function(e) {
+      var className = e.target.className;
+      ~className.indexOf('htmlvid') &&
+        BigPicture({
+          el: e.target,
+          vidSrc: e.target.getAttribute('vidSrc')
+        });
+      ~className.indexOf('vimeo') &&
+        BigPicture({
+          el: e.target,
+          vimeoSrc: e.target.getAttribute('vimeoSrc')
+        });
+      ~className.indexOf('youtube') &&
+        BigPicture({
+          el: e.target,
+          ytSrc: e.target.getAttribute('ytSrc')
+        });
+    })
 
-    function BigPicImage(){
-      BigPicture({
-        el: this
-      });
-    }
-    function BigPicRemoteVideo(){
-      BigPicture({
-        el: this,
-        vidSrc: this.getAttribute('vidSrc')
-      });
-    }
-    function BigPicYoutube(){
-      BigPicture({
-        el: this,
-        ytSrc: this.getAttribute('ytSrc')
-      });
-    }
-    function BigPicVimeo(){
-      BigPicture({
-        el: this,
-        vimeoSrc: this.getAttribute('vimeoSrc')
-      });
-    }
-    function BigPicRemoteImage(){
-      BigPicture({
-        el: this,
-        imgSrc: this.src.replace('_thumb', '')
-      });
-    }
-    function BigPicBrokenImage(){
-      BigPicture({
-        el: this,
-        imgSrc: '/nopic.jpg'
-      });
-    }
-    function BigPicBrokenVid(){
-      BigPicture({
-        el: this,
-        vidSrc: '/novid.mp4'
-      });
-    }
+    setClickHandler('broken_container', function(e) {
+      e.target.id === 'broken_image' &&
+        BigPicture({
+          el: e.target,
+          imgSrc: '/nopic.jpg'
+        });
+      e.target.id === 'broken_vid' &&
+        BigPicture({
+          el: e.target,
+          vidSrc: '/novid.mp4'
+        });
+      ~e.target.className.indexOf('vimeo') &&
+        BigPicture({
+          el: e.target,
+          vimeoSrc: 'ajoiejlkr'
+        })
+      ~e.target.className.indexOf('youtube') &&
+        BigPicture({
+          el: e.target,
+          ytSrc: 'oijlksdjf'
+        })
+    });
 
   })();
 </script>
