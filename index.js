@@ -37,6 +37,8 @@
     captionContent,
     // hide caption button element
     captionHideButton,
+    // open state for container element
+    isOpen,
     // used during close animation to avoid triggering timeout twice
     isClosing,
     // array of prev viewed image urls to check if cached before showing loading icon
@@ -195,6 +197,11 @@
       isLoading && toggleLoadingIcon(true);
     });
 
+    // close container on escape key press
+    doc.addEventListener('keyup', function(e) {
+      e.keyCode === 27 && isOpen && close(container);
+    });
+
     // all done
     initialized = true;
   }
@@ -268,6 +275,8 @@
     // fade in container
     changeCSS(container, 'opacity:1;' + pointerEventsAuto);
 
+    isOpen = true;
+
     // enlarge displayEl, fade in caption if hasCaption
     timeout(function() {
       changeCSS(displayElement, webkitify('transition:', 'transform .35s;') + webkitify('transform:', 'none;'));
@@ -290,6 +299,8 @@
 
     // timeout to remove els from dom; use variable to avoid calling more than once
     timeout(removeContainer, 350);
+
+    isOpen = false;
     isClosing = true;
   }
 

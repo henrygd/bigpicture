@@ -1,7 +1,7 @@
 {
   "name": "bigpicture",
-  "version": "1.1.11",
-  "description": "Super lightweight image and video viewer, supports youtube/vimeo",
+  "version": "1.1.12",
+  "description": "Lightweight image and video viewer, supports youtube/vimeo",
   "main": "index.js",
   "scripts": {
     "start": "cd example_page && live-server",
@@ -26,6 +26,6 @@
   },
   "devDependencies": {
     "live-server": "^1.2.0",
-    "uglify-js": "^2.7.5"
+    "uglify-js": "2.7.5"
   }
 }
