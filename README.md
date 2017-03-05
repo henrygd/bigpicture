@@ -1,10 +1,12 @@
-# ![alt text](https://i.imgur.com/4O1IXsG.png "logo") BigPicture.js
+# ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture.js
 
-![alt text](http://i.imgur.com/7T6dnN3.gif "logo")
+![Example page screenshot](http://i.imgur.com/7T6dnN3.gif)
 
-Super lightweight (just over 4 KB minified, 2 KB gzip) and framework independent JavaScript image / video viewer.
+Lightweight (just over 4 KB minified, 2 KB gzip) and framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
+
+Doesn't sit on the DOM when inactive.
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
 

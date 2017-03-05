@@ -21,6 +21,8 @@
     iframeSiteVid,
     // store requested image source
     imgSrc,
+    // button that closes the container
+    closeButton,
     // youtube / vimeo video id
     siteVidID,
     // keeps track of loading icon display state
@@ -56,6 +58,7 @@
     pointerEventsAuto = 'pointer-events:auto',
     cHeight = 'clientHeight',
     cWidth = 'clientWidth',
+    listenFor = 'addEventListener',
     timeout = global.setTimeout;
 
 
@@ -124,9 +127,9 @@
   // create all needed methods / store dom elements on first use
   function initialize() {
 
-    // return close button elements (divs to avoid default button styles)
+    // return close button elements
     function createCloseButton() {
-      var el = doc[createEl]('DIV');
+      var el = doc[createEl]('button');
       el.className = 'bp-x';
       el[htmlInner] = '&#215;'
       return el;
@@ -138,14 +141,15 @@
     // add style
     // if you want to tweak, grab from doc head & run through beautifier
     var style = doc[createEl]('STYLE');
-    style[htmlInner] = '#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,.bp-x,#bp_loader{position:absolute;right:0}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:', 'rotate(1turn);') + '}}') + '#bp_container img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{width:171vh}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}.bp-x{font-family:Arial;top:0;cursor:pointer;opacity:.8;font-size:3em;padding:0 .3em;color:#fff}#bp_caption .bp-x{left:2%;top:auto;right:auto;bottom:100%;padding:0 .6em;background:#d74040;border-radius:2px 2px 0 0;font-size:2.3em}.bp-x:hover{opacity:1}@media (max-aspect-ratio:9/5){#bp_sv{height:53vw}}';
+    style[htmlInner] = '#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,.bp-x,#bp_loader{position:absolute;right:0}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_loader svg{width:40%;max-height:40%;margin:auto;' + webkitify('animation:', 'ldr .7s infinite linear;') + '}' + webkitifyKeyframes('keyframes ldr{to{' + webkitify('transform:', 'rotate(1turn);') + '}}') + '#bp_container img,#bp_sv,#bp_vid{max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{width:171vh}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}.bp-x{font-family:Arial;top:0;cursor:pointer;opacity:.8;font-size:3em;padding:0 .3em;color:#fff;background:transparent;border:0;text-shadow:0 0 2px #000}#bp_caption .bp-x{left:2%;top:auto;right:auto;bottom:100%;padding:0 .6em;background:#d74040;border-radius:2px 2px 0 0;font-size:2.3em;text-shadow:none}.bp-x:hover,.bp-x:focus{opacity:1}.bp-x:active{outline:0}@media (max-aspect-ratio:9/5){#bp_sv{height:53vw}}';
     doc.head[appendEl](style);
 
     // create container element
     container =  doc[createEl]('DIV');
     container.id = 'bp_container';
     container.onclick = close;
-    container[appendEl](createCloseButton());
+    closeButton = createCloseButton();
+    container[appendEl](closeButton);
 
     // create display image element
     displayImage = doc[createEl]('IMG');
@@ -193,14 +197,22 @@
     displayImage.onerror = open.bind(null, 'image');
 
     // adjust loader position on window resize
-    global.addEventListener('resize', function() {
+    global[listenFor]('resize', function() {
       isLoading && toggleLoadingIcon(true);
     });
 
     // close container on escape key press
-    doc.addEventListener('keyup', function(e) {
+    doc[listenFor]('keyup', function(e) {
       e.keyCode === 27 && isOpen && close(container);
     });
+
+    // trap focus within conainer while open
+    doc[listenFor]('focus', function(e) {
+      if (isOpen && !container.contains(e.target)) {
+        e.stopPropagation();
+        closeButton.focus();
+      }
+    }, true);
 
     // all done
     initialized = true;
@@ -287,9 +299,14 @@
 
   // close active display element
   function close(e) {
-    // don't close if caption or video was clicked
+    var target = e.target;
     var clickEls = [caption, captionHideButton, displayVideo, captionText];
-    if (isClosing || ~clickEls.indexOf(e.target)) {
+
+    // blur to hide close button focus style
+    target && target.blur();
+
+    // don't close if one of the clickEls was clicked or container is already closing
+    if (isClosing || ~clickEls.indexOf(target)) {
       return;
     }
 
@@ -305,7 +322,7 @@
   }
 
 
-  // remove the container / display element to the DOM before each open
+  // remove container / display element from the DOM
   function removeContainer() {
     // remove container from DOM & clear inline style
     doc.body[removeEl](container);
