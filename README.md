@@ -89,6 +89,36 @@ To display a caption, add a caption attribute with the desired text (or HTML) to
 <img src="yourimage.jpg" caption="Example of an optional caption."/>
 ```
 
+## Optional callbacks
+
+To execute specified functions at the start or end of the opening animation, pass them in as `animationStart` or `animationEnd`. `animationStart` will run even if there's an error, so it's okay to use if you want to hide your own custom loader.
+
+```javascript
+BigPicture({
+  el: this,
+  // executed immediately before open animation starts
+  animationStart: function() {
+    console.log('it is opening');
+  },
+  // executed immediately after open animation finishes
+  animationEnd: function() {
+    console.log('it has opened');
+  }
+});
+```
+
+## Hide default loading icon
+
+If you're loading remote images or videos and don't want the default loading icon displayed, set `noLoader` to true.
+
+```javascript
+BigPicture({
+  el: this,
+  vimeoSrc: '119287310',
+  noLoader: true
+});
+```
+
 ### Troubleshooting
 
 If the media or loading icon fails to display, it's probably a z-index issue. The media container has a default z-index of 9999, and the loading icon has a z-index of 9 relative to the trigger element's parent container.

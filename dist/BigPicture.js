@@ -49,6 +49,11 @@
     cached,
     // store whether image requested is remote or local
     remoteImage,
+    // store animation opening callbacks
+    animationStart,
+    animationEnd,
+    // set to true if user wants to hide loading icon
+    noLoader,
     // Save bytes in the minified version
     doc = document,
     appendEl = 'appendChild',
@@ -59,21 +64,29 @@
     cHeight = 'clientHeight',
     cWidth = 'clientWidth',
     listenFor = 'addEventListener',
-    timeout = global.setTimeout;
+    timeout = global.setTimeout,
+    clearTimeout = global.clearTimeout;
 
 
   global.BigPicture = function(options) {
-    // store video id if youtube / vimeo video is requested
-    siteVidID = options.ytSrc || options.vimeoSrc;
-
-    // called on initial open to create elements / style / add event handlers
+    // initialize called on initial open to create elements / style / event handlers
     initialized || initialize();
 
     // clear currently loading stuff
     if (isLoading) {
-      global.clearTimeout(checkVidTimeout);
+      clearTimeout(checkVidTimeout);
       removeContainer();
     }
+
+    // store video id if youtube / vimeo video is requested
+    siteVidID = options.ytSrc || options.vimeoSrc;
+
+    // store optional callbacks
+    animationStart = options.animationStart;
+    animationEnd = options.animationEnd;
+
+    // store whether user requests to hide loading icon
+    noLoader = options.noLoader;
 
     // set trigger element
     el = options.el;
@@ -256,6 +269,8 @@
 
 // hide / show loading icon
   function toggleLoadingIcon(bool) {
+    // don't show loading icon if noLoader is specified
+    if (noLoader) return;
     // bool is true if we want to show icon, false if we want to remove
     // change style to match trigger element dimensions if we want to show
     bool && changeCSS(loadingIcon, 'top:' + el.offsetTop +
@@ -272,6 +287,9 @@
     // hide loading spinner
     isLoading && toggleLoadingIcon();
 
+    // execute animationStart callback
+    animationStart && animationStart();
+
     // check if we have an error string instead of normal event
     if (typeof(err) === 'string') {
       removeContainer();
@@ -286,6 +304,9 @@
 
     // fade in container
     changeCSS(container, 'opacity:1;' + pointerEventsAuto);
+
+    // set animationEnd callback to run after animation ends (cleared if container closed)
+    animationEnd = timeout(animationEnd, 410);
 
     isOpen = true;
 
@@ -316,6 +337,9 @@
 
     // timeout to remove els from dom; use variable to avoid calling more than once
     timeout(removeContainer, 350);
+
+    // clear animationEnd timeout
+    clearTimeout(animationEnd);
 
     isOpen = false;
     isClosing = true;
