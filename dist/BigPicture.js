@@ -128,7 +128,7 @@
       displayElement = displayImage;
       // get img source or element background image
       displayElement.src = el.tagName === 'IMG' ? el.src :
-        global.getComputedStyle(el).backgroundImage.replace(/^url|[\(|\)|'|"]/g, '');
+        global.getComputedStyle(el).backgroundImage.replace(/^url|[(|)|'|"]/g, '');
     }
 
     // add container to page
@@ -171,6 +171,7 @@
     displayVideo = doc[createEl]('VIDEO');
     displayVideo.id = 'bp_vid';
     displayVideo.autoplay = true;
+    displayVideo.setAttribute('playsinline', true);
     displayVideo.controls = true;
     displayVideo.loop = true;
 
@@ -248,7 +249,7 @@
   function createIframe(isYoutube) {
     // create appropriate url for youtube or vimeo
     var url = isYoutube ?
-      'www.youtube.com/embed/' + siteVidID + '?enablejsapi=1&html5=1&rel=0&showinfo=0&' :
+      'www.youtube.com/embed/' + siteVidID + '?html5=1&rel=0&showinfo=0&playsinline=1&' :
       'player.vimeo.com/video/' + siteVidID + '?';
 
     // set iframe src to url
