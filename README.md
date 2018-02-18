@@ -12,7 +12,7 @@ Doesn't sit on the DOM when inactive.
 
 ## Instructions
 
-Install via npm or add a script from the [dist](dist) directory to your page.
+Install via npm or add a script from the [dist](dist) directory to your page. [CDN links are available via jsDelivr here](https://www.jsdelivr.com/package/npm/bigpicture?path=dist).
 
 ```
 npm install bigpicture
