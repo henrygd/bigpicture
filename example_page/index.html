@@ -1,37 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <link rel="shortcut icon" href="img/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
   <title>BigPicture Example Page</title>
   <link href="http://overpass-30e2.kxcdn.com/overpass.css" rel="stylesheet">
-  <!-- inject:css -->
-  <link rel="stylesheet" href="css/main.min.css">
-  <!-- endinject -->
+  <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
   <div class="main">
     <div class="header">
-      <div class="logo"><img src="img/bp.svg" alt="BigPicture" title="BigPicture"></div>
-      <p>Super lightweight &amp; framework independent JavaScript image / video viewer</p>
-      <a class="github" href="https://github.com/henrygd/bigpicture">View on Github</a>
+      <div class="logo logo-icon">
+        <img src="img/bp.svg" alt="BigPicture" title="BigPicture">
+      </div>
+      <p>Lightweight &amp; framework independent JavaScript image / video viewer</p>
+      <a class="btn github" href="https://github.com/henrygd/bigpicture">View on Github</a>
     </div>
 
     <div id="image_container" class="container">
-      <h3>Remote Images</h3>
-      <p>Click thumbnails to load larger images. Loading spinner &amp; captions are built-in.</p>
+      <h3>Remote Image Gallery</h3>
+      <p>Click thumbnails to launch gallery. Loading spinner &amp; captions are built-in.</p>
       <div class="flex">
-        <img src="img/photo1_thumb.jpg"/>
-        <img src="img/photo7_thumb.jpg"/>
-        <img src="img/photo2_thumb.jpg" caption="Example of an optional caption. You can put words here."/>
-        <img src="img/photo3_thumb.jpg"/>
+        <a href="img/photo1.jpg">
+          <img data-bp="img/photo1.jpg" src="img/photo1_thumb.jpg">
+        </a>
+        <a href="img/photo7.jpg">
+          <img data-bp="img/photo7.jpg" src="img/photo7_thumb.jpg">
+        </a>
+        <a href="img/photo2.jpg">
+          <img data-bp="img/photo2.jpg" src="img/photo2_thumb.jpg" caption="Example of an optional caption. You can put words here.">
+        </a>
+        <a href="img/photo3.jpg">
+          <img data-bp="img/photo3.jpg" src="img/photo3_thumb.jpg">
+        </a>
       </div>
+      <p>A gallery can also be opened from a single element using an array of images.</p>
+      <button class="btn logo-icon" id="unsplash_gallery">Open remote unsplash images</button>
     </div>
 
     <div id="video_container" class="container">
       <h3>Videos</h3>
-      <p>Supports Youtube, Vimeo, and direct links. The popup can be triggered by any element. For example, <span class="text-trigger htmlvid" vidSrc="videos/panda.mp4">click here</span> for a sneezing panda</p>
+      <p>Supports Youtube, Vimeo, and direct links and can be triggered by any element. For example,
+        <span class="text-trigger htmlvid" vidSrc="videos/panda.mp4">click here</span> for a sneezing panda</p>
       <div class="flex">
         <div class="vid htmlvid" style="background-image:url(img/vid_towers.jpg)" vidSrc="videos/towers.mp4"></div>
         <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)" ytSrc="tU1b1H2EWU4"></div>
@@ -43,14 +56,14 @@
     </div>
 
     <div id="local_image_container" class="container">
-      <h3>Local Images</h3>
-      <p>Normal image elements resized with css</p>
+      <h3>Individual Images</h3>
+      <p>Specify a remote source, or pass in an element alone in to enlarge its current image.</p>
       <div class="flex">
-        <img src="img/background3.jpg"/>
-        <img src="img/background4.jpg" caption="Another optional caption."/>
-        <img src="img/background6.jpg"/>
+        <img src="img/background3.jpg" />
+        <img src="img/background4.jpg" caption="Another optional caption." />
+        <img src="img/background6.jpg" />
       </div>
-      <p>Elements with background-images. Script extracts the image automatically.</p>
+      <p>Script grabs the background image automatically.</p>
       <div id="background_images" class="flex">
         <div class="background-image" style="background-image:url(img/background2.jpg)"></div>
         <div class="background-image" style="background-image:url(img/background5.jpg)"></div>
@@ -62,7 +75,7 @@
       <h3>Error Handling</h3>
       <p>If your remote link is 404, or the display element throws an error, the user will receive an alert.</p>
       <div class="flex">
-        <img id="broken_image" src="img/broken_thumb.jpg"/>
+        <img id="broken_image" src="img/broken_thumb.jpg" />
         <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em"></div>
       </div>
       <p>If the vimeo / youtube URL is incorrect, the embed is shown with the error.</p>
@@ -73,79 +86,100 @@
     </div>
 
     <div class="credit">
-      <p>All images found at <a href="https://unsplash.com/">Unsplash</a>  |  "Towers of Pfeiffer" video by <a href="https://vimeo.com/ghpvisuals">Grant Porter</a> (CC-BY)</p>
+      <p>All images found on
+        <a href="https://unsplash.com/">Unsplash</a>
+        <span>|</span> "Towers of Pfeiffer" video by
+        <a href="https://vimeo.com/ghpvisuals">Grant Porter</a> (CC-BY)</p>
     </div>
   </div>
 
-<!-- inject:js -->
-<script src="js/BigPicture.js"></script>
-<!-- endinject -->
+  <script src="js/BigPicture.js"></script>
 
-<script>
-  (function() {
+  <script>
+    (function () {
 
-    function setClickHandler(id, fn) {
-      document.getElementById(id).onclick = fn;
-    }
+      // four image gallery
+      var imageLinks = document.querySelectorAll('#image_container a')
+      for (var i = 0; i < imageLinks.length; i++) {
+        imageLinks[i].addEventListener('click', function (e) {
+          e.preventDefault()
+          BigPicture({
+            el: e.target,
+            gallery: '#image_container'
+          });
+        })
+      }
 
-    setClickHandler('image_container', function(e) {
-      e.target.tagName === 'IMG' && BigPicture({
-        el: e.target,
-        imgSrc: e.target.src.replace('_thumb', '')
+      // unsplash gallery
+      var unsplashImages = ['meiying', 'clemono2', 'heftiba', 'westbeach013', 'anniespratt', 'tentides', 'nathananderson', 'aaronburden', 'igorovsyannykov', 'scottwebb', 'lucabravo', 'neonbrand'].map(function (user) {
+        return {
+          src: 'https://source.unsplash.com/user/' + user + '/daily'
+        }
+      })
+      document.getElementById('unsplash_gallery').onclick = function () {
+        BigPicture({
+          el: this,
+          gallery: unsplashImages
+        })
+      }
+
+      // other stuff
+      function setClickHandler(id, fn) {
+        document.getElementById(id).onclick = fn;
+      }
+
+      setClickHandler('local_image_container', function (e) {
+        (e.target.tagName === 'IMG' || e.target.className === 'background-image') &&
+          BigPicture({
+            el: e.target
+          });
       });
-    });
 
-    setClickHandler('local_image_container', function(e) {
-      (e.target.tagName === 'IMG' || e.target.className === 'background-image') &&
-        BigPicture({
-          el: e.target
-        });
-    });
+      setClickHandler('video_container', function (e) {
+        var className = e.target.className;
+        ~className.indexOf('htmlvid') &&
+          BigPicture({
+            el: e.target,
+            vidSrc: e.target.getAttribute('vidSrc')
+          });
+        ~className.indexOf('vimeo') &&
+          BigPicture({
+            el: e.target,
+            vimeoSrc: e.target.getAttribute('vimeoSrc')
+          });
+        ~className.indexOf('youtube') &&
+          BigPicture({
+            el: e.target,
+            ytSrc: e.target.getAttribute('ytSrc')
+          });
+      })
 
-    setClickHandler('video_container', function(e) {
-      var className = e.target.className;
-      ~className.indexOf('htmlvid') &&
-        BigPicture({
-          el: e.target,
-          vidSrc: e.target.getAttribute('vidSrc')
-        });
-      ~className.indexOf('vimeo') &&
-        BigPicture({
-          el: e.target,
-          vimeoSrc: e.target.getAttribute('vimeoSrc')
-        });
-      ~className.indexOf('youtube') &&
-        BigPicture({
-          el: e.target,
-          ytSrc: e.target.getAttribute('ytSrc')
-        });
-    })
+      setClickHandler('broken_container', function (e) {
+        e.target.id === 'broken_image' &&
+          BigPicture({
+            el: e.target,
+            imgSrc: '/nopic.jpg'
+          });
+        e.target.id === 'broken_vid' &&
+          BigPicture({
+            el: e.target,
+            vidSrc: '/novid.mp4'
+          });
+        ~e.target.className.indexOf('vimeo') &&
+          BigPicture({
+            el: e.target,
+            vimeoSrc: 'ajoiejlkr'
+          })
+        ~e.target.className.indexOf('youtube') &&
+          BigPicture({
+            el: e.target,
+            ytSrc: 'oijlksdjf'
+          })
+      });
 
-    setClickHandler('broken_container', function(e) {
-      e.target.id === 'broken_image' &&
-        BigPicture({
-          el: e.target,
-          imgSrc: '/nopic.jpg'
-        });
-      e.target.id === 'broken_vid' &&
-        BigPicture({
-          el: e.target,
-          vidSrc: '/novid.mp4'
-        });
-      ~e.target.className.indexOf('vimeo') &&
-        BigPicture({
-          el: e.target,
-          vimeoSrc: 'ajoiejlkr'
-        })
-      ~e.target.className.indexOf('youtube') &&
-        BigPicture({
-          el: e.target,
-          ytSrc: 'oijlksdjf'
-        })
-    });
-
-  })();
-</script>
+    })();
+  </script>
 
 </body>
+
 </html>

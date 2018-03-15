@@ -1,8 +1,8 @@
 # ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture.js
 
-![Example page screenshot](http://i.imgur.com/7T6dnN3.gif)
+![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-Lightweight (just over 4 KB minified, 2 KB gzip) and framework independent JavaScript image / video viewer.
+Lightweight (3 KB gzip) and framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
@@ -19,7 +19,7 @@ npm install bigpicture
 ```
 
 ```javascript
-var BigPicture = require('bigpicture');
+var BigPicture = require('bigpicture')
 ```
 
 Or with a script tag:
@@ -27,26 +27,18 @@ Or with a script tag:
 ```html
 <script src="BigPicture.js"></script>
 ```
+
 The script is all that's needed -- no additional CSS file.
 
 When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `this` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
 
-##### Remote image example
+##### Remote video file
 
 ```javascript
 BigPicture({
-  el: this,
-  imgSrc: 'http://yourimage.jpg'
-});
-```
-
-##### Remote video
-
-```javascript
-BigPicture({
-  el: this,
-  vidSrc: 'http://yourvideo.mp4'
-});
+	el: this,
+	vidSrc: 'http://yourvideo.mp4'
+})
 ```
 
 ##### Youtube
@@ -55,9 +47,9 @@ Pass in the video ID from the url. For example, the ID for `https://www.youtube.
 
 ```javascript
 BigPicture({
-  el: this,
-  ytSrc: 'z_PeaHVcohg'
-});
+	el: this,
+	ytSrc: 'z_PeaHVcohg'
+})
 ```
 
 ##### Vimeo
@@ -66,9 +58,18 @@ Like Youtube, pass in the video ID from the url. The ID for `https://vimeo.com/1
 
 ```javascript
 BigPicture({
-  el: this,
-  vimeoSrc: '119287310'
-});
+	el: this,
+	vimeoSrc: '119287310'
+})
+```
+
+##### Remote individual image
+
+```javascript
+BigPicture({
+	el: this,
+	imgSrc: 'http://yourimage.jpg'
+})
 ```
 
 ##### Local images & background images
@@ -77,13 +78,61 @@ If your trigger element is an image or an element with a background image, you c
 
 ```javascript
 BigPicture({
-  el: this
-});
+	el: this
+})
+```
+
+##### Galleries
+
+Pass in an element like normal with a selector string of the parent container. The gallery will use all elements within the container that have the attribute `data-bp` and set the value of that attribute as the displayed image.
+
+```html
+<!-- example html for script below -->
+<div id="image_container">
+	<a href="photo1.jpg">
+		<img data-bp="photo1.jpg" src="photo1_thumb.jpg">
+	</a>
+	<a href="photo2.jpg">
+		<img data-bp="photo2.jpg" src="photo2_thumb.jpg">
+	</a>
+</div>
+```
+
+```javascript
+// example script for html above
+var imageLinks = document.querySelectorAll('#image_container a')
+for (var i = 0; i < imageLinks.length; i++) {
+	imageLinks[i].addEventListener('click', function(e) {
+		e.preventDefault()
+		BigPicture({
+			el: e.target,
+			gallery: '#image_container'
+		})
+	})
+}
+```
+
+Alternatively, you can pass in an array of objects. The gallery will go through these in order. You can include an `el` value if you want an image to close into a specific element, but this should only be done if you're providing an `el` value for every image. Here's example code for the unsplash gallery on the [demo site](https://henrygd.me/bigpicture), which opens and closes into a single button:
+
+```javascript
+var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
+	return {
+		src: 'https://source.unsplash.com/user/' + user + '/daily'
+		// caption: 'This image is from unsplash'
+		// el: el
+	}
+})
+document.getElementById('unsplash_gallery').onclick = function() {
+	BigPicture({
+		el: this,
+		gallery: unsplashImages
+	})
+}
 ```
 
 ## Captions
 
-To display a caption, add a caption attribute with the desired text (or HTML) to the trigger element itself.
+To display a caption, add a caption attribute with the desired text or HTML to the trigger element itself.
 
 ```html
 <img src="yourimage.jpg" caption="Example of an optional caption."/>
@@ -95,16 +144,16 @@ To execute specified functions at the start or end of the opening animation, pas
 
 ```javascript
 BigPicture({
-  el: this,
-  // executed immediately before open animation starts
-  animationStart: function() {
-    console.log('it is opening');
-  },
-  // executed immediately after open animation finishes
-  animationEnd: function() {
-    console.log('it has opened');
-  }
-});
+	el: this,
+	// executed immediately before open animation starts
+	animationStart: function() {
+		console.log('it is opening')
+	},
+	// executed immediately after open animation finishes
+	animationEnd: function() {
+		console.log('it has opened')
+	}
+})
 ```
 
 ## Hide default loading icon
@@ -113,10 +162,10 @@ If you're loading remote images or videos and don't want the default loading ico
 
 ```javascript
 BigPicture({
-  el: this,
-  vimeoSrc: '119287310',
-  noLoader: true
-});
+	el: this,
+	vimeoSrc: '119287310',
+	noLoader: true
+})
 ```
 
 ### Troubleshooting
