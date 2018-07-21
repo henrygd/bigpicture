@@ -522,7 +522,7 @@
 				webkitify('transition:', 'transform .35s;') +
 					webkitify('transform:', 'none;')
 			)
-			captionContent && timeout(toggleCaption, captionContent, 250)
+			captionContent && timeout(toggleCaption, 250, captionContent)
 		}, 60)
 	}
 
