@@ -28,7 +28,7 @@ Or with a script tag:
 <script src="BigPicture.js"></script>
 ```
 
-The script is all that's needed -- no additional CSS file.
+No additional CSS file is neccesary.
 
 When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `this` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
 
@@ -84,50 +84,44 @@ BigPicture({
 
 ##### Galleries
 
-Pass in an element like normal with a selector string of the parent container. The gallery will use all elements within the container that have the attribute `data-bp` and set the value of that attribute as the displayed image.
+Add a `data-bp` attribute to your elements with the image you want to open, and pass a selector string or NodeList to the function. The string should specify a container which has `data-bp` elements somewhere inside, whereas the NodeList should be the elements themselves.
 
 ```html
-<!-- example html for script below -->
 <div id="image_container">
-  <a href="photo1.jpg">
-    <img data-bp="photo1.jpg" src="photo1_thumb.jpg">
-  </a>
-  <a href="photo2.jpg">
-    <img data-bp="photo2.jpg" src="photo2_thumb.jpg">
-  </a>
+  <img src="photo1_thumb.jpg" data-bp="photo1.jpg" data-open>
+  <img src="photo2_thumb.jpg" data-bp="photo2.jpg">
+  <img src="photo3_thumb.jpg" data-bp="photo3.jpg" data-open>
 </div>
 ```
 
 ```javascript
-// example script for html above
-var imageLinks = document.querySelectorAll('#image_container a')
-for (var i = 0; i < imageLinks.length; i++) {
-  imageLinks[i].addEventListener('click', function(e) {
-    e.preventDefault()
-    BigPicture({
-      el: e.target,
-      gallery: '#image_container'
-    })
-  })
-}
+// opens gallery w/ all three images
+BigPicture({
+  el: this,
+  gallery: '#image_container'
+})
+```
+```javascript
+// opens gallery w/ the two data-open images
+BigPicture({
+  el: this,
+  gallery: document.querySelectorAll('#image_container [data-open]')
+})
 ```
 
-Alternatively, you can pass in an array of objects. The gallery will go through these in order. You can include an `el` value if you want an image to close into a specific element, but this should only be done if you're providing an `el` value for every image. Here's example code for the unsplash gallery on the [demo site](https://henrygd.me/bigpicture), which opens and closes into a single button:
+Alternatively, you can pass in an array of objects. The gallery will go through these in order. Here's example code for the unsplash gallery on the [demo site](https://henrygd.me/bigpicture):
 
 ```javascript
 var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
   return {
     src: 'https://source.unsplash.com/user/' + user + '/daily'
     // caption: 'This image is from unsplash'
-    // el: el
   }
 })
-document.getElementById('unsplash_gallery').onclick = function() {
-  BigPicture({
-    el: this,
-    gallery: unsplashImages
-  })
-}
+BigPicture({
+  el: this,
+  gallery: unsplashImages
+})
 ```
 
 ## Captions
