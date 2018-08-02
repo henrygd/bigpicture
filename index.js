@@ -125,8 +125,7 @@
 		} else if (options.vidSrc) {
 			// if direct video link
 			toggleLoadingIcon(true)
-			displayElement = displayVideo
-			displayElement.src = options.vidSrc
+			makeVidSrc(options.vidSrc)
 			checkVid()
 		} else {
 			// local image / background image already loaded on page
@@ -312,6 +311,21 @@
 				scaleHeight +
 				', 0);'
 		)
+	}
+
+	function makeVidSrc(source) {
+		if (Array.isArray(source)) {
+			displayElement = displayVideo.cloneNode()
+			source.forEach(function(src) {
+				var source = doc[createEl]('SOURCE')
+				source.src = src
+				source.type = 'video/' + src.match(/.(\w+)$/)[1]
+				displayElement[appendEl](source)
+			})
+		} else {
+			displayElement = displayVideo
+			displayElement.src = source
+		}
 	}
 
 	function makeGallery(gallery) {
