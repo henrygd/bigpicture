@@ -34,10 +34,14 @@ When you want to open something, pass an object to `BigPicture` containing the e
 
 ##### Remote video file
 
+Multiple sources supported as of 1.4.0
+
 ```javascript
 BigPicture({
   el: this,
   vidSrc: 'http://yourvideo.mp4'
+  // or with multiple sources
+  // vidSrc: ['http://yourvideo.mp4', 'http://yourvideo.webm']
 })
 ```
 
