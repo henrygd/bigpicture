@@ -5,20 +5,30 @@
 	"main": "index.js",
 	"scripts": {
 		"start": "cd example_page && lite-server",
-		"build": "./build.sh"
+		"dev": "npm run start",
+		"build": "gulp build"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/henrygd/bigpicture"
 	},
-	"keywords": ["lightbox", "gallery", "photo", "image", "video", "youtube", "vimeo"],
+	"keywords": [
+		"lightbox",
+		"gallery",
+		"photo",
+		"image",
+		"video",
+		"youtube",
+		"vimeo"
+	],
 	"author": "Henry Dollman <hank@henrygd.me>",
 	"license": "MIT",
-	"eslintConfig": {
-		"extends": "react-app"
-	},
 	"devDependencies": {
-		"lite-server": "^2.3.0",
-		"uglify-js": "2.7.5"
+		"gulp": "^3.9.1",
+		"gulp-rename": "^1.4.0",
+		"gulp-replace": "^1.0.0",
+		"gulp-uglify": "^3.0.1",
+		"lite-server": "^2.4.0",
+		"pump": "^3.0.0"
 	}
 }
