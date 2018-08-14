@@ -43,8 +43,7 @@
 
     <div id="video_container" class="container">
       <h3>Videos</h3>
-      <p>Supports Youtube, Vimeo, and direct links and can be triggered by any element. For example,
-        <span class="text-trigger htmlvid" vidSrc="videos/panda.mp4">click here</span> for a sneezing panda</p>
+      <p>Supports Youtube, Vimeo, and direct links. (Also works with <a href="/audio/happy-step.mp3" class="text-trigger" id="audio_example" caption="Nordgroove - Happy Step">audio files</a>.)</p>
       <div class="flex">
         <div class="vid htmlvid" style="background-image:url(img/vid_towers.jpg)" vidSrc="videos/towers.mp4"></div>
         <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)" ytSrc="tU1b1H2EWU4"></div>
@@ -89,7 +88,9 @@
       <p>All images found on
         <a href="https://unsplash.com/">Unsplash</a>
         <span>|</span> "Towers of Pfeiffer" video by
-        <a href="https://vimeo.com/ghpvisuals">Grant Porter</a> (CC-BY)</p>
+        <a href="https://vimeo.com/grantporter">Grant Porter</a> (CC-BY)
+        <span>|</span> Music by <a href="https://icons8.com/music/author/nordgroove">Nordgroove</a> via <a href="https://icons8.com/music">Fugue</a>
+      </p>
     </div>
   </div>
 
@@ -177,6 +178,13 @@
           })
       });
 
+      setClickHandler('audio_example', function(e) {
+        e.preventDefault()
+        BigPicture({
+          el: this,
+          audio: '/audio/happy-step.mp3'
+        })
+      })
     })();
   </script>
 

@@ -14,6 +14,8 @@
 		displayImage,
 		// popup video element
 		displayVideo,
+		// popup audio element
+		displayAudio,
 		// container element to hold youtube / vimeo iframe
 		iframeContainer,
 		// iframe to hold youtube / vimeo player
@@ -27,7 +29,7 @@
 		// keeps track of loading icon display state
 		isLoading,
 		// timeout to check video status while loading
-		checkVidTimeout,
+		checkMediaTimeout,
 		// loading icon element
 		loadingIcon,
 		// caption element
@@ -85,7 +87,7 @@
 
 		// clear currently loading stuff
 		if (isLoading) {
-			clearTimeout(checkVidTimeout)
+			clearTimeout(checkMediaTimeout)
 			removeContainer()
 		}
 
@@ -122,11 +124,17 @@
 			!~imgCache.indexOf(imgSrc) && toggleLoadingIcon(true)
 			displayElement = displayImage
 			displayElement.src = imgSrc
+		} else if (options.audio) {
+			// if direct video link
+			toggleLoadingIcon(true)
+			displayElement = displayAudio
+			displayElement.src = options.audio
+			checkMedia('audio file')
 		} else if (options.vidSrc) {
 			// if direct video link
 			toggleLoadingIcon(true)
 			makeVidSrc(options.vidSrc)
-			checkVid()
+			checkMedia('video')
 		} else {
 			// local image / background image already loaded on page
 			displayElement = displayImage
@@ -171,7 +179,7 @@
 		// add style - if you want to tweak, run through beautifier
 		var style = doc[createEl]('STYLE')
 		style[htmlInner] =
-			'.bp-lr,.bp-x:active{outline:0}#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0;backface-visibility:hidden}#bp_container>*,#bp_loader,.bp-x{position:absolute;right:0;z-index:10}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_count,.bp-lr,.bp-x{cursor:pointer;color:#fff}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto}#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{width:171vh}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_count,.bp-x{top:0;opacity:.8;font-size:3em;padding:0 .3em;background:0 0;border:0;text-shadow:0 0 2px rgba(0,0,0,.6)}#bp_caption .bp-x{left:2%;top:auto;right:auto;bottom:100%;padding:0 .6em;background:#d74040;border-radius:2px 2px 0 0;font-size:2.3em;text-shadow:none}.bp-x:focus,.bp-x:hover{opacity:1}@media (max-aspect-ratio:9/5){#bp_sv{height:53vw}}.bp-lr{top:50%;top:calc(50% - 138px);padding:99px 1vw;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@media (max-width:600px){.bp-lr{font-size:15vw}}#bp_count{left:0;display:table;padding:14px;color:#fff;font-size:22px;opacity:.7;cursor:default;right:auto}'
+			'.bp-lr,.bp-x:active{outline:0}#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0;backface-visibility:hidden}#bp_container>*,#bp_loader,.bp-x{position:absolute;right:0;z-index:10}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:-webkit-flex;display:flex;margin:0;cursor:wait;z-index:9}#bp_count,.bp-lr,.bp-x{cursor:pointer;color:#fff}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto}#bp_container img,#bp_sv,#bp_aud,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{width:171vh}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_count,.bp-x{top:0;opacity:.8;font-size:3em;padding:0 .3em;background:0 0;border:0;text-shadow:0 0 2px rgba(0,0,0,.6)}#bp_caption .bp-x{left:2%;top:auto;right:auto;bottom:100%;padding:0 .6em;background:#d74040;border-radius:2px 2px 0 0;font-size:2.3em;text-shadow:none}.bp-x:focus,.bp-x:hover{opacity:1}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}@media (max-aspect-ratio:9/5){#bp_sv{height:53vw}}.bp-lr{top:50%;top:calc(50% - 138px);padding:99px 1vw;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@media (max-width:600px){.bp-lr{font-size:15vw}}#bp_count{left:0;display:table;padding:14px;color:#fff;font-size:22px;opacity:.7;cursor:default;right:auto}'
 		doc.head[appendEl](style)
 
 		// create container element
@@ -208,10 +216,15 @@
 		// create display video element
 		displayVideo = doc[createEl]('VIDEO')
 		displayVideo.id = 'bp_vid'
-		displayVideo.autoplay = true
 		displayVideo.setAttribute('playsinline', true)
 		displayVideo.controls = true
 		displayVideo.loop = true
+
+		// create audio element
+		displayAudio = doc[createEl]("audio")
+		displayAudio.id = "bp_aud"
+		displayAudio.controls = true
+		displayAudio.loop = true
 
 		// create gallery counter
 		galleryCounter = doc[createEl]('span')
@@ -245,7 +258,7 @@
 		iframeSiteVid = doc[createEl]('IFRAME')
 		iframeSiteVid.allowFullscreen = true
 		iframeSiteVid.onload = open
-		changeCSS(iframeSiteVid, 'border:0px;height:100%;width:100%')
+		changeCSS(iframeSiteVid, 'border:0;height:100%;width:100%')
 		iframeContainer[appendEl](iframeSiteVid)
 
 		// display image bindings for image load and error
@@ -439,8 +452,8 @@
 		// create appropriate url for youtube or vimeo
 		var url = isYoutube
 			? 'www.youtube.com/embed/' +
-			  siteVidID +
-			  '?html5=1&rel=0&showinfo=0&playsinline=1&'
+				siteVidID +
+				'?html5=1&rel=0&showinfo=0&playsinline=1&'
 			: 'player.vimeo.com/video/' + siteVidID + '?'
 
 		// set iframe src to url
@@ -448,11 +461,16 @@
 	}
 
 	// timeout to check video status while loading
-	// onloadeddata event doesn't seem to fire in less up-to-date browsers like midori & epiphany
-	function checkVid() {
-		if (displayElement.readyState === 4) open()
-		else if (displayVideo.error) open('video')
-		else checkVidTimeout = timeout(checkVid, 35)
+	function checkMedia(errMsg) {
+		if (~[1, 4].indexOf(displayElement.readyState)) {
+			open()
+			// short timeout to to make sure controls show in safari 11
+			timeout(function(){
+				displayElement.play()
+			}, 99)
+		}
+		else if (displayElement.error) open(errMsg)
+		else checkMediaTimeout = timeout(checkMedia, 35)
 	}
 
 	// hide / show loading icon
@@ -547,6 +565,7 @@
 			caption,
 			captionHideButton,
 			displayVideo,
+			displayAudio,
 			captionText,
 			leftArrowBtn,
 			rightArrowBtn,

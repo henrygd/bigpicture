@@ -67,6 +67,15 @@ BigPicture({
 })
 ```
 
+##### Audio
+
+```javascript
+BigPicture({
+  el: this,
+  audio: 'http://youraudio.mp3'
+})
+```
+
 ##### Remote individual image
 
 ```javascript
@@ -173,3 +182,9 @@ If the media or loading icon fails to display, it's probably a z-index issue. Th
 ---
 
 License: MIT
+
+All images found on Unsplash
+
+Towers of Pfeiffer video by [Grant Porter](https://vimeo.com/grantporter) (CC-BY)
+
+Music by [Nordgroove](https://icons8.com/music/author/nordgroove) via [icons8](https://icons8.com/music)
