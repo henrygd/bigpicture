@@ -66,8 +66,8 @@
 		preloadedImages = {},
 		// whether device supports touch events
 		supportsTouch,
-		// set to true if user wants to hide loading icon
-		noLoader,
+		// options object
+		opts,
 		// Save bytes in the minified version
 		doc = document,
 		appendEl = 'appendChild',
@@ -91,16 +91,15 @@
 			removeContainer()
 		}
 
+		opts = options
+
 		// store video id if youtube / vimeo video is requested
 		siteVidID = options.ytSrc || options.vimeoSrc
 
 		// store optional callbacks
 		animationStart = options.animationStart
 		animationEnd = options.animationEnd
-
-		// store whether user requests to hide loading icon
-		noLoader = options.noLoader
-
+		
 		// set trigger element
 		el = options.el
 
@@ -399,7 +398,7 @@
 				// normalize position
 				position = Math.max(0, Math.min(position, galleryLength))
 				// cancel if image has already been preloaded
-				if (!!preloadedImages[position]) return
+				if (preloadedImages[position]) return
 				var src = galleryEls[position].src
 				// create image for preloadedImages
 				var img = doc[createEl]('IMG')
@@ -470,13 +469,13 @@
 			}, 99)
 		}
 		else if (displayElement.error) open(errMsg)
-		else checkMediaTimeout = timeout(checkMedia, 35)
+		else checkMediaTimeout = timeout(checkMedia.bind(null, errMsg), 35)
 	}
 
 	// hide / show loading icon
 	function toggleLoadingIcon(bool) {
 		// don't show loading icon if noLoader is specified
-		if (noLoader) return
+		if (opts.noLoader) return
 		// bool is true if we want to show icon, false if we want to remove
 		// change style to match trigger element dimensions if we want to show
 		bool &&
@@ -523,7 +522,7 @@
 		// check if we have an error string instead of normal event
 		if (typeof err === 'string') {
 			removeContainer()
-			return alert('Error: The requested ' + err + ' could not be loaded.')
+			return opts.onError ? opts.onError() : alert('Error: The requested ' + err + ' could not be loaded.')
 		}
 
 		// if remote image is loaded, add url to imgCache array

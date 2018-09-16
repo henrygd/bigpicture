@@ -175,6 +175,19 @@ BigPicture({
 })
 ```
 
+## Error handling
+
+You may override the default error alert for images, audio, and direct video links by passing an `onError` function.
+
+```javascript
+BigPicture({
+  el: this,
+  onError: function() {
+    console.log('there was an error')
+  }
+})
+```
+
 ### Troubleshooting
 
 If the media or loading icon fails to display, it's probably a z-index issue. The media container has a default z-index of 9999, and the loading icon has a z-index of 9 relative to the trigger element's parent container.
