@@ -452,7 +452,7 @@
 		var url = isYoutube
 			? 'www.youtube.com/embed/' +
 				siteVidID +
-				'?html5=1&rel=0&showinfo=0&playsinline=1&'
+				'?html5=1&rel=0&playsinline=1&'
 			: 'player.vimeo.com/video/' + siteVidID + '?'
 
 		// set iframe src to url
