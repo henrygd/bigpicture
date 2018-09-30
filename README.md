@@ -2,7 +2,7 @@
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-Lightweight (3 KB gzip) and framework independent JavaScript image / video viewer.
+Lightweight (3.5 KB gzip) and framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
