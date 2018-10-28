@@ -139,10 +139,10 @@ BigPicture({
 
 ## Captions
 
-To display a caption, add a caption attribute with the desired text or HTML to the trigger element itself.
+To display a caption, add a `data-caption` attribute with the desired text or HTML to the trigger element itself.
 
 ```html
-<img src="yourimage.jpg" caption="Example of an optional caption."/>
+<img src="yourimage.jpg" data-caption="Example of an optional caption."/>
 ```
 
 ## Optional callbacks

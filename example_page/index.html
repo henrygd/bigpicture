@@ -31,7 +31,7 @@
           <img data-bp="img/photo7.jpg" src="img/photo7_thumb.jpg">
         </a>
         <a href="img/photo2.jpg">
-          <img data-bp="img/photo2.jpg" src="img/photo2_thumb.jpg" caption="Example of an optional caption. You can put words here.">
+          <img data-bp="img/photo2.jpg" src="img/photo2_thumb.jpg" data-caption="Example of an optional caption. You can put words here.">
         </a>
         <a href="img/photo3.jpg">
           <img data-bp="img/photo3.jpg" src="img/photo3_thumb.jpg">
@@ -43,7 +43,7 @@
 
     <div id="video_container" class="container">
       <h3>Videos</h3>
-      <p>Supports Youtube, Vimeo, and direct links. (Also works with <a href="/audio/happy-step.mp3" class="text-trigger" id="audio_example" caption="Nordgroove - Happy Step">audio files</a>.)</p>
+      <p>Supports Youtube, Vimeo, and direct links. (Also works with <a href="/audio/happy-step.mp3" class="text-trigger" id="audio_example" data-caption="Nordgroove - Happy Step">audio files</a>.)</p>
       <div class="flex">
         <div class="vid htmlvid" style="background-image:url(img/vid_towers.jpg)" vidSrc="videos/towers.mp4"></div>
         <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)" ytSrc="tU1b1H2EWU4"></div>
@@ -59,14 +59,14 @@
       <p>Specify a remote source, or pass in an element alone in to enlarge its current image.</p>
       <div class="flex">
         <img src="img/background3.jpg" />
-        <img src="img/background4.jpg" caption="Another optional caption." />
+        <img src="img/background4.jpg" data-caption="Another optional caption." />
         <img src="img/background6.jpg" />
       </div>
       <p>Script grabs the background image automatically.</p>
       <div id="background_images" class="flex">
         <div class="background-image" style="background-image:url(img/background2.jpg)"></div>
         <div class="background-image" style="background-image:url(img/background5.jpg)"></div>
-        <div class="background-image" style="background-image:url(img/background1.jpg)" caption="You can use captions with any kind of element."></div>
+        <div class="background-image" style="background-image:url(img/background1.jpg)" data-caption="You can use captions with any kind of element."></div>
       </div>
     </div>
 
@@ -112,7 +112,7 @@
       }
 
       // unsplash gallery
-      var unsplashImages = ['meiying', 'clemono2', 'heftiba', 'westbeach013', 'anniespratt', 'tentides', 'nathananderson', 'aaronburden', 'elke_karin', 'scottwebb', 'lucabravo', 'neonbrand'].map(function (user) {
+      var unsplashImages = ['meiying', 'clemono2', 'heftiba', 'westbeach013', 'anniespratt', 'camylla93', 'nathananderson', 'aaronburden', 'elke_karin', 'scottwebb', 'lucabravo', 'neonbrand'].map(function (user) {
         return {
           src: 'https://source.unsplash.com/user/' + user + '/daily'
         }

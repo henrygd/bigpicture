@@ -107,7 +107,7 @@
 		remoteImage = false
 
 		// set caption if provided
-		captionContent = el.getAttribute('caption')
+		captionContent = el.getAttribute('data-caption')
 
 		if (options.gallery) {
 			makeGallery(options.gallery)
@@ -353,7 +353,7 @@
 				return {
 					el: el,
 					src: el.getAttribute('data-bp'),
-					caption: el.getAttribute('caption')
+					caption: el.getAttribute('data-caption')
 				}
 			})
 		}
