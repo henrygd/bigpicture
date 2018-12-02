@@ -643,6 +643,9 @@
 			displayImage.onerror = open.bind(null, 'image')
 		}
 
+		// run close callback
+		opts.onClose && opts.onClose()
+
 		isClosing = isLoading = false
 	}
 
