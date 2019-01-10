@@ -111,11 +111,11 @@
 
 		if (options.gallery) {
 			makeGallery(options.gallery)
-		} else if (siteVidID) {
-			// if vimeo or youtube video
+		} else if (siteVidID || options.iframeSrc) {
+			// if vimeo, youtube, or iframe video
 			toggleLoadingIcon(true)
 			displayElement = iframeContainer
-			createIframe(!!options.ytSrc)
+			createIframe();
 		} else if (options.imgSrc) {
 			// if remote image
 			remoteImage = true
@@ -472,18 +472,24 @@
 		toggleCaption(galleryEls[galleryPosition].caption)
 	}
 
-	// create youtube / vimeo video iframe
-	function createIframe(isYoutube) {
-		// create appropriate url for youtube or vimeo
-		var url = isYoutube
-			? 'www.youtube.com/embed/' +
-				siteVidID +
-				'?html5=1&rel=0&playsinline=1&'
-			: 'player.vimeo.com/video/' + siteVidID + '?'
-
-		// set iframe src to url
-		iframeSiteVid.src = 'https://' + url + 'autoplay=1'
-	}
+		// create video iframe
+		function createIframe() {
+			var url,
+					prefix = 'https://',
+					suffix = 'autoplay=1';
+	
+			// create appropriate url
+			if (opts.ytSrc) {
+				url = prefix + 'www.youtube.com/embed/' + siteVidID + '?html5=1&rel=0&playsinline=1&' + suffix;
+			} else if (opts.vimeoSrc) {
+				url = prefix + 'player.vimeo.com/video/' + siteVidID + '?' + suffix;
+			} else if (opts.iframeSrc) {
+				url = opts.iframeSrc;
+			}
+	
+			// set iframe src to url
+			iframeSiteVid.src = url;
+		}
 
 	// timeout to check video status while loading
 	function checkMedia(errMsg) {

@@ -67,6 +67,17 @@ BigPicture({
 })
 ```
 
+##### iframe
+
+Pass in the URL from the iframe.
+
+```javascript
+BigPicture({
+  el: this,
+  iframeSrc: 'http://youriframe.html'
+})
+```
+
 ##### Audio
 
 ```javascript
