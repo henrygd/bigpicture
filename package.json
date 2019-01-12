@@ -19,7 +19,8 @@
 		"image",
 		"video",
 		"youtube",
-		"vimeo"
+		"vimeo",
+		"iframe"
 	],
 	"author": "Henry Dollman <hank@henrygd.me>",
 	"license": "MIT",
