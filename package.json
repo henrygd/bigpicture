@@ -1,7 +1,7 @@
 {
 	"name": "bigpicture",
-	"version": "2.1.0",
-	"description": "Lightweight image and video viewer, supports youtube/vimeo",
+	"version": "2.1.1",
+	"description": "Lightweight image and video viewer, supports youtube / vimeo",
 	"main": "index.js",
 	"scripts": {
 		"start": "cd example_page && lite-server",
