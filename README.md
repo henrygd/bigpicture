@@ -158,7 +158,11 @@ To display a caption, add a `data-caption` attribute with the desired text or HT
 
 ## Optional callbacks
 
-To execute specified functions at the start or end of the opening animation, pass them in as `animationStart` or `animationEnd`. `animationStart` will run even if there's an error, so it's okay to use if you want to hide your own custom loader. `onClose` runs after closing animation finishes.
+`animationStart` and `animationEnd` run at the start or end of the opening animation. `animationStart` will run even if there's an error, so it's okay to use if you want to hide your own custom loader. 
+
+`onClose` runs after closing animation finishes.
+
+`onChangeImage` runs when a gallery image is changed and provides useful data about the current image.
 
 ```javascript
 // example of how scrolling can be disabled using callbacks
@@ -177,7 +181,11 @@ BigPicture({
     // executed immediately after close animation finishes
     document.documentElement.style.overflowY = 'auto'
     document.body.style.overflowY = 'auto'
-  }
+  },
+  onChangeImage: function(props) {
+    // executed on gallery image change
+    console.log('gallery image changed', props)
+  },
 })
 ```
 
