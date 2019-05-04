@@ -2,3 +2,4 @@ node_modules
 .eslintrc
 todo
 shrinkwrap.yaml
+pnpm-lock.yaml
