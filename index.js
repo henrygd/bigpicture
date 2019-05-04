@@ -53,6 +53,8 @@
 		// store animation opening callbacks
 		animationStart,
 		animationEnd,
+	    	// store changeGalleryImage callback
+	    	onChangeGalleryImage,
 		// gallery left / right icons
 		rightArrowBtn,
 		leftArrowBtn,
@@ -99,6 +101,7 @@
 		// store optional callbacks
 		animationStart = options.animationStart
 		animationEnd = options.animationEnd
+		onChangeGalleryImage = options.onChangeGalleryImage
 		
 		// set trigger element
 		el = options.el
@@ -471,6 +474,8 @@
 		galleryCounter[htmlInner] = galleryPosition + 1 + '/' + galleryEls.length
 		// show / hide caption
 		toggleCaption(galleryEls[galleryPosition].caption)
+		// execute onChangeGalleryImage callback
+		onChangeGalleryImage && onChangeGalleryImage()
 	}
 
 	// create video iframe
