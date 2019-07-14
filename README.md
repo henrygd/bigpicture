@@ -112,9 +112,9 @@ Add a `data-bp` attribute to your elements with the image you want to open, and 
 
 ```html
 <div id="image_container">
-  <img src="photo1_thumb.jpg" data-bp="photo1.jpg" data-open>
+  <img src="photo1_thumb.jpg" data-bp="photo1.jpg" class="example">
   <img src="photo2_thumb.jpg" data-bp="photo2.jpg">
-  <img src="photo3_thumb.jpg" data-bp="photo3.jpg" data-open>
+  <img src="photo3_thumb.jpg" data-bp="photo3.jpg" class="example">
 </div>
 ```
 
@@ -126,10 +126,10 @@ BigPicture({
 })
 ```
 ```javascript
-// opens gallery w/ the two data-open images
+// opens gallery w/ the two images matching the selector
 BigPicture({
   el: this,
-  gallery: document.querySelectorAll('#image_container [data-open]')
+  gallery: document.querySelectorAll('#image_container .example')
 })
 ```
 
@@ -145,6 +145,15 @@ var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
 BigPicture({
   el: this,
   gallery: unsplashImages
+})
+```
+
+You can also loop the gallery (next on last image gives you the first image, and vice versa).
+```javascript
+BigPicture({
+  el: this,
+  gallery: '#image_container',
+  loop: true
 })
 ```
 

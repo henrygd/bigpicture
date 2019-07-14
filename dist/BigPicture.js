@@ -396,7 +396,6 @@
 
   function updateGallery(movement) {
     var galleryLength = galleryEls.length - 1;
-    var isEnd;
 
     // only allow one change at a time
     if (isLoading) {
@@ -404,25 +403,25 @@
     }
 
     // return if requesting out of range image
-    if (movement > 0) {
-      if (galleryPosition === galleryLength) {
-        isEnd = true;
-      }
-    } else if (galleryPosition === 0) {
-      isEnd = true;
-    }
+    var isEnd =
+      (movement > 0 && galleryPosition === galleryLength) ||
+      (movement < 0 && !galleryPosition);
     if (isEnd) {
       // if beginning or end of gallery, run end animation
-      changeCSS(displayImage, '');
-      timeout(
-        changeCSS,
-        9,
-        displayImage,
-        'animation:' +
-          (movement > 0 ? 'bpl' : 'bpf') +
-          ' .3s;transition:transform .35s'
-      );
-      return;
+      if (!opts.loop) {
+        changeCSS(displayImage, '');
+        timeout(
+          changeCSS,
+          9,
+          displayImage,
+          'animation:' +
+            (movement > 0 ? 'bpl' : 'bpf') +
+            ' .3s;transition:transform .35s'
+        );
+        return;
+      }
+      // if gallery is looped, adjust position to beginning / end
+      galleryPosition = movement > 0 ? -1 : galleryLength + 1;
     }
 
     // normalize position
