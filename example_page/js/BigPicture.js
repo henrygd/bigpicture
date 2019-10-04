@@ -113,7 +113,7 @@
 		captionContent = el.getAttribute('data-caption');
 
 		if (options.gallery) {
-			makeGallery(options.gallery, options.position || 0);
+			makeGallery(options.gallery, options.position);
 		} else if (siteVidID || options.iframeSrc) {
 			// if vimeo, youtube, or iframe video
 			toggleLoadingIcon(true);
@@ -346,11 +346,10 @@
 		}
 	}
 
-	function makeGallery(gallery, position = false) {
-		console.log(position)
+	function makeGallery(gallery, position) {
 		if (Array.isArray(gallery)) {
 			// is array of images
-			galleryPosition = (position === 0 || position) ? position : 0;
+			galleryPosition = position || 0;
 			galleryEls = gallery;
 			captionContent = gallery[0].caption;
 		} else {
@@ -362,7 +361,7 @@
 			);
 			// find initial gallery position
 			var elIndex = galleryEls.indexOf(el);
-			galleryPosition = (position === 0 || position) ? position : (elIndex !== -1 ? elIndex : 0);
+			galleryPosition = position ? position : elIndex !== -1 ? elIndex : 0;
 			// make gallery object w/ els / src / caption
 			galleryEls = galleryEls.map(function(el) {
 				return {
