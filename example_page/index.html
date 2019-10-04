@@ -38,7 +38,11 @@
         </a>
       </div>
       <p>A gallery can also be opened from a single element using an array of images.</p>
-      <button class="btn logo-icon" id="unsplash_gallery">Open remote unsplash images</button>
+      <div class="flex">
+        <button class="btn logo-icon" id="unsplash_gallery">Open remote unsplash images</button>
+        <button class="btn logo-icon" id="unsplash_gallery_0">Open first of unsplash images</button>
+        <button class="btn logo-icon" id="unsplash_gallery_6">Open seventh of unsplash images</button>
+      </div>
     </div>
 
     <div id="video_container" class="container">
@@ -120,6 +124,22 @@
       document.getElementById('unsplash_gallery').onclick = function () {
         BigPicture({
           el: this,
+          gallery: unsplashImages
+        })
+      }
+
+      document.getElementById('unsplash_gallery_0').onclick = function () {
+        BigPicture({
+          el: this,
+          position: 0,
+          gallery: unsplashImages
+        })
+      }
+
+      document.getElementById('unsplash_gallery_6').onclick = function () {
+        BigPicture({
+          el: this,
+          position: 6,
           gallery: unsplashImages
         })
       }
