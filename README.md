@@ -144,7 +144,9 @@ var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
 })
 BigPicture({
   el: this,
-  gallery: unsplashImages
+  gallery: unsplashImages,
+  // optionally specify a starting index
+  position: 2
 })
 ```
 

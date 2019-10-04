@@ -95,6 +95,7 @@ body {
 .btn.logo-icon {
 	font-size: 1.1em;
 	border-color: #818f46;
+	margin: 3px;
 }
 .btn.logo-icon:before {
 	transform: rotate(3deg) translateY(-0.1em);
