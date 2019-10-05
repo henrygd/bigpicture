@@ -351,7 +351,7 @@
 			// is array of images
 			galleryPosition = position || 0;
 			galleryEls = gallery;
-			captionContent = gallery[0].caption;
+			captionContent = gallery[galleryPosition].caption;
 		} else {
 			// is element selector or nodelist
 			galleryEls = [].slice.call(
@@ -361,7 +361,7 @@
 			);
 			// find initial gallery position
 			var elIndex = galleryEls.indexOf(el);
-			galleryPosition = position ? position : elIndex !== -1 ? elIndex : 0;
+			galleryPosition = (position === 0 || position) ? position : (elIndex !== -1 ? elIndex : 0);
 			// make gallery object w/ els / src / caption
 			galleryEls = galleryEls.map(function(el) {
 				return {
