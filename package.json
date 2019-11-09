@@ -4,9 +4,10 @@
 	"description": "Lightweight image and video viewer, supports youtube / vimeo",
 	"main": "index.js",
 	"scripts": {
-		"start": "cd example_page && lite-server",
-		"dev": "npm run start",
-		"build": "gulp build"
+		"build": "rollup -c",
+		"start": "run-p serve autobuild",
+		"serve": "live-server example_page",
+		"autobuild": "rollup -c -w"
 	},
 	"repository": {
 		"type": "git",
@@ -25,11 +26,11 @@
 	"author": "Henry Dollman <hank@henrygd.me>",
 	"license": "MIT",
 	"devDependencies": {
-		"gulp": "^3.9.1",
-		"gulp-rename": "^1.4.0",
-		"gulp-replace": "^1.0.0",
-		"gulp-uglify": "^3.0.1",
-		"lite-server": "^2.4.0",
-		"pump": "^3.0.0"
+		"live-server": "^1.2.1",
+		"npm-run-all": "^4.1.5",
+		"rollup": "^1.10.1",
+		"rollup-plugin-buble": "^0.19.8",
+		"rollup-plugin-size": "^0.2.0",
+		"rollup-plugin-terser": "^4.0.4"
 	}
 }

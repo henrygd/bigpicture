@@ -3,3 +3,4 @@ node_modules
 todo
 shrinkwrap.yaml
 pnpm-lock.yaml
+*.map
