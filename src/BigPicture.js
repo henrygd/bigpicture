@@ -1,112 +1,112 @@
 // BigPicture.js | license MIT | henrygd.me/bigpicture
 
 // assign window object to variable
-const	global = window
+const global = window
 
 // trigger element used to open popup
-let	el
+let el
 
 // set to true after first interaction
-let	initialized
+let initialized
 
 // container element holding html needed for script
-let	container
+let container
 
 // currently active display element (image, video, youtube / vimeo iframe container)
-let	displayElement
+let displayElement
 
 // popup image element
-let	displayImage
+let displayImage
 
 // popup video element
-let	displayVideo
+let displayVideo
 
 // popup audio element
-let	displayAudio
+let displayAudio
 
 // container element to hold youtube / vimeo iframe
-let	iframeContainer
+let iframeContainer
 
 // iframe to hold youtube / vimeo player
-let	iframeSiteVid
+let iframeSiteVid
 
 // store requested image source
-let	imgSrc
+let imgSrc
 
 // button that closes the container
-let	closeButton
+let closeButton
 
 // youtube / vimeo video id
-let	siteVidID
+let siteVidID
 
 // keeps track of loading icon display state
-let	isLoading
+let isLoading
 
 // timeout to check video status while loading
-let	checkMediaTimeout
+let checkMediaTimeout
 
 // loading icon element
-let	loadingIcon
+let loadingIcon
 
 // caption element
-let	caption
+let caption
 
 // caption content element
-let	captionText
+let captionText
 
 // store caption content
-let	captionContent
+let captionContent
 
 // hide caption button element
-let	captionHideButton
+let captionHideButton
 
 // open state for container element
-let	isOpen
+let isOpen
 
 // gallery open state
-let	galleryOpen
+let galleryOpen
 
 // used during close animation to avoid triggering timeout twice
-let	isClosing
+let isClosing
 
 // array of prev viewed image urls to check if cached before showing loading icon
-const	imgCache = []
+const imgCache = []
 
 // store whether image requested is remote or local
-let	remoteImage
+let remoteImage
 
 // store animation opening callbacks
-let	animationStart
+let animationStart
 let animationEnd
 
 // store changeGalleryImage callback
-let	onChangeImage
+let onChangeImage
 
 // gallery left / right icons
-let	rightArrowBtn
+let rightArrowBtn
 
 let leftArrowBtn
 
 // position of gallery
-let	galleryPosition
+let galleryPosition
 
 // hold active gallery els / image src
-let	galleryEls
+let galleryEls
 
 // counter element
-let	galleryCounter
+let galleryCounter
 
 // store images in gallery that are being loaded
-let	preloadedImages = {}
+let preloadedImages = {}
 
 // whether device supports touch events
-let	supportsTouch
+let supportsTouch
 
 // options object
-let	opts
+let opts
 
 // Save bytes in the minified version
-const	doc = document
+const doc = document
 const appendEl = 'appendChild'
 const createEl = 'createElement'
 const removeEl = 'removeChild'
@@ -115,8 +115,77 @@ const pointerEventsAuto = 'pointer-events:auto'
 const cHeight = 'clientHeight'
 const cWidth = 'clientWidth'
 const listenFor = 'addEventListener'
-const timeout = global.setTimeout
-const clearTimeout = global.clearTimeout
+
+export default options => {
+	// initialize called on initial open to create elements / style / event handlers
+	initialized || initialize()
+
+	// clear currently loading stuff
+	if (isLoading) {
+		clearTimeout(checkMediaTimeout)
+		removeContainer()
+	}
+
+	opts = options
+
+	// store video id if youtube / vimeo video is requested
+	siteVidID = options.ytSrc || options.vimeoSrc
+
+	// store optional callbacks
+	animationStart = options.animationStart
+	animationEnd = options.animationEnd
+	onChangeImage = options.onChangeImage
+
+	// set trigger element
+	el = options.el
+
+	// wipe existing remoteImage state
+	remoteImage = false
+
+	// set caption if provided
+	captionContent = el.getAttribute('data-caption')
+
+	if (options.gallery) {
+		makeGallery(options.gallery, options.position)
+	} else if (siteVidID || options.iframeSrc) {
+		// if vimeo, youtube, or iframe video
+		// toggleLoadingIcon(true)
+		displayElement = iframeContainer
+		createIframe()
+	} else if (options.imgSrc) {
+		// if remote image
+		remoteImage = true
+		imgSrc = options.imgSrc
+		!~imgCache.indexOf(imgSrc) && toggleLoadingIcon(true)
+		displayElement = displayImage
+		displayElement.src = imgSrc
+	} else if (options.audio) {
+		// if direct video link
+		toggleLoadingIcon(true)
+		displayElement = displayAudio
+		displayElement.src = options.audio
+		checkMedia('audio file')
+	} else if (options.vidSrc) {
+		// if direct video link
+		toggleLoadingIcon(true)
+		makeVidSrc(options.vidSrc)
+		checkMedia('video')
+	} else {
+		// local image / background image already loaded on page
+		displayElement = displayImage
+		// get img source or element background image
+		displayElement.src =
+			el.tagName === 'IMG'
+				? el.src
+				: global
+						.getComputedStyle(el)
+						.backgroundImage.replace(/^url|[(|)|'|"]/g, '')
+	}
+
+	// add container to page
+	container[appendEl](displayElement)
+	doc.body[appendEl](container)
+}
 
 // create all needed methods / store dom elements on first use
 function initialize() {
@@ -146,7 +215,7 @@ function initialize() {
 	// add style - if you want to tweak, run through beautifier
 	const style = doc[createEl]('STYLE')
 	style[htmlInner] =
-		'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;margin:0;cursor:wait;z-index:9;background:0 0}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{height:0;padding-bottom:54%;background-color:#000;width:96%}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0 0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}@media (min-aspect-ratio:9/5){#bp_sv{height:98%;width:170.6vh;padding:0}}'
+		'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;align-items:center;cursor:wait;z-index:9}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{background:#111}#bp_sv svg{width:80px}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0 0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}'
 	doc.head[appendEl](style)
 
 	// create container element
@@ -223,7 +292,7 @@ function initialize() {
 	iframeSiteVid = doc[createEl]('IFRAME')
 	iframeSiteVid.setAttribute('allowfullscreen', true)
 	iframeSiteVid.allow = 'autoplay; fullscreen'
-	iframeSiteVid.onload = open
+	iframeSiteVid.onload = () => iframeContainer[removeEl](loadingIcon)
 	changeCSS(
 		iframeSiteVid,
 		'border:0;position:absolute;height:100%;width:100%;left:0;top:0'
@@ -234,9 +303,11 @@ function initialize() {
 	displayImage.onload = open
 	displayImage.onerror = open.bind(null, 'image')
 
-	// adjust loader position on window resize
 	global[listenFor]('resize', () => {
+		// adjust loader position on window resize
 		galleryOpen || (isLoading && toggleLoadingIcon(true))
+		// adjust iframe dimensions
+		displayElement === iframeContainer && updateIframeDimensions()
 	})
 
 	// close container on escape key press and arrow buttons for gallery
@@ -275,7 +346,7 @@ function initialize() {
 
 // return transform style to make full size display el match trigger el size
 function getRect() {
-	const {top, left, width, height} = el.getBoundingClientRect()
+	const { top, left, width, height } = el.getBoundingClientRect()
 	const leftOffset = left - (container[cWidth] - width) / 2
 	const centerTop = top - (container[cHeight] - height) / 2
 	const scaleWidth = el[cWidth] / displayElement[cWidth]
@@ -361,7 +432,7 @@ function updateGallery(movement) {
 		// if beginning or end of gallery, run end animation
 		if (!opts.loop) {
 			changeCSS(displayImage, '')
-			timeout(
+			setTimeout(
 				changeCSS,
 				9,
 				displayImage,
@@ -467,6 +538,38 @@ function createIframe() {
 
 	// set iframe src to url
 	iframeSiteVid.src = url
+
+	updateIframeDimensions()
+
+	setTimeout(() => {
+		changeCSS(loadingIcon, '')
+		iframeContainer[appendEl](loadingIcon)
+		open()
+	}, 9)
+}
+
+function updateIframeDimensions() {
+	let height
+	let width
+	// handle height / width / aspect / max width for iframe
+	const windowHeight = global.innerHeight * 0.95
+	const windowWidth = global.innerWidth * 0.95
+	const windowAspect = windowHeight / windowWidth
+
+	const dimensions = opts.dimensions || [1600, 900]
+	let dimensionHeight = dimensions[1]
+	let dimensionWidth = dimensions[0]
+
+	const iframeAspect = dimensionHeight / dimensionWidth
+
+	if (iframeAspect > windowAspect) {
+		height = Math.min(dimensions[1], windowHeight)
+		width = (dimensions[0] / dimensions[1]) * height
+	} else {
+		width = Math.min(dimensions[0], windowWidth)
+		height = (dimensions[1] / dimensions[0]) * width
+	}
+	iframeContainer.style.cssText += `width:${width}px;height:${height}px;`
 }
 
 // timeout to check video status while loading
@@ -474,11 +577,14 @@ function checkMedia(errMsg) {
 	if (~[1, 4].indexOf(displayElement.readyState)) {
 		open()
 		// short timeout to to make sure controls show in safari 11
-		timeout(() => {
+		setTimeout(() => {
 			displayElement.play()
 		}, 99)
-	} else if (displayElement.error) open(errMsg)
-	else checkMediaTimeout = timeout(checkMedia, 35, errMsg)
+	} else if (displayElement.error) {
+		open(errMsg)
+	} else {
+		checkMediaTimeout = setTimeout(checkMedia, 35, errMsg)
+	}
 }
 
 // hide / show loading icon
@@ -534,22 +640,22 @@ function open(err) {
 	remoteImage && addToImgCache(imgSrc)
 
 	// transform displayEl to match trigger el
-	changeCSS(displayElement, getRect())
+	displayElement.style.cssText += getRect()
 
 	// fade in container
 	changeCSS(container, `opacity:1;${pointerEventsAuto}`)
 
 	// set animationEnd callback to run after animation ends (cleared if container closed)
-	animationEnd = timeout(animationEnd, 410)
+	animationEnd = setTimeout(animationEnd, 410)
 
 	isOpen = true
 
 	galleryOpen = !!galleryEls
 
 	// enlarge displayEl, fade in caption if hasCaption
-	timeout(() => {
-		changeCSS(displayElement, 'transition:transform .35s;transform:none')
-		captionContent && timeout(toggleCaption, 250, captionContent)
+	setTimeout(() => {
+		displayElement.style.cssText += 'transition:transform .35s;transform:none'
+		captionContent && setTimeout(toggleCaption, 250, captionContent)
 	}, 60)
 }
 
@@ -580,7 +686,7 @@ function close(e) {
 	changeCSS(container, pointerEventsAuto)
 
 	// timeout to remove els from dom; use variable to avoid calling more than once
-	timeout(removeContainer, 350)
+	setTimeout(removeContainer, 350)
 
 	// clear animationEnd timeout
 	clearTimeout(animationEnd)
@@ -595,6 +701,7 @@ function removeContainer() {
 	doc.body[removeEl](container)
 	container[removeEl](displayElement)
 	changeCSS(container, '')
+	changeCSS(displayElement, '')
 
 	// clear src of displayElement (or iframe if display el is iframe container)
 	;(displayElement === iframeContainer
@@ -631,75 +738,4 @@ function removeContainer() {
 // style helper functions
 function changeCSS({ style }, newStyle) {
 	style.cssText = newStyle
-}
-
-export default options => {
-	// initialize called on initial open to create elements / style / event handlers
-	initialized || initialize()
-
-	// clear currently loading stuff
-	if (isLoading) {
-		clearTimeout(checkMediaTimeout)
-		removeContainer()
-	}
-
-	opts = options
-
-	// store video id if youtube / vimeo video is requested
-	siteVidID = options.ytSrc || options.vimeoSrc
-
-	// store optional callbacks
-	animationStart = options.animationStart
-	animationEnd = options.animationEnd
-	onChangeImage = options.onChangeImage
-
-	// set trigger element
-	el = options.el
-
-	// wipe existing remoteImage state
-	remoteImage = false
-
-	// set caption if provided
-	captionContent = el.getAttribute('data-caption')
-
-	if (options.gallery) {
-		makeGallery(options.gallery, options.position)
-	} else if (siteVidID || options.iframeSrc) {
-		// if vimeo, youtube, or iframe video
-		toggleLoadingIcon(true)
-		displayElement = iframeContainer
-		createIframe()
-	} else if (options.imgSrc) {
-		// if remote image
-		remoteImage = true
-		imgSrc = options.imgSrc
-		!~imgCache.indexOf(imgSrc) && toggleLoadingIcon(true)
-		displayElement = displayImage
-		displayElement.src = imgSrc
-	} else if (options.audio) {
-		// if direct video link
-		toggleLoadingIcon(true)
-		displayElement = displayAudio
-		displayElement.src = options.audio
-		checkMedia('audio file')
-	} else if (options.vidSrc) {
-		// if direct video link
-		toggleLoadingIcon(true)
-		makeVidSrc(options.vidSrc)
-		checkMedia('video')
-	} else {
-		// local image / background image already loaded on page
-		displayElement = displayImage
-		// get img source or element background image
-		displayElement.src =
-			el.tagName === 'IMG'
-				? el.src
-				: global
-						.getComputedStyle(el)
-						.backgroundImage.replace(/^url|[(|)|'|"]/g, '')
-	}
-
-	// add container to page
-	container[appendEl](displayElement)
-	doc.body[appendEl](container)
 }

@@ -1,209 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="shortcut icon" href="img/favicon.png" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes"
+		/>
+		<title>BigPicture Example Page</title>
+		<link
+			href="https://overpass-30e2.kxcdn.com/overpass.css"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="css/main.css" />
+	</head>
 
-<head>
-  <meta charset="UTF-8">
-  <link rel="shortcut icon" href="img/favicon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
-  <title>BigPicture Example Page</title>
-  <link href="https://overpass-30e2.kxcdn.com/overpass.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css">
-</head>
+	<body>
+		<div class="main">
+			<div class="header">
+				<div class="logo logo-icon">
+					<img src="img/bp.svg" alt="BigPicture" title="BigPicture" />
+				</div>
+				<p>
+					Lightweight &amp; framework independent JavaScript image / video
+					viewer
+				</p>
+				<a class="btn github" href="https://github.com/henrygd/bigpicture"
+					>View on Github</a
+				>
+			</div>
 
-<body>
-  <div class="main">
-    <div class="header">
-      <div class="logo logo-icon">
-        <img src="img/bp.svg" alt="BigPicture" title="BigPicture">
-      </div>
-      <p>Lightweight &amp; framework independent JavaScript image / video viewer</p>
-      <a class="btn github" href="https://github.com/henrygd/bigpicture">View on Github</a>
-    </div>
+			<div id="image_container" class="container">
+				<h3>Remote Image Gallery</h3>
+				<p>
+					Click thumbnails to launch gallery. Loading spinner &amp; captions are
+					built-in.
+				</p>
+				<div class="flex">
+					<a href="img/photo1.jpg">
+						<img data-bp="img/photo1.jpg" src="img/photo1_thumb.jpg" />
+					</a>
+					<a href="img/photo7.jpg">
+						<img data-bp="img/photo7.jpg" src="img/photo7_thumb.jpg" />
+					</a>
+					<a href="img/photo2.jpg">
+						<img
+							data-bp="img/photo2.jpg"
+							src="img/photo2_thumb.jpg"
+							data-caption="Example of an optional caption. You can put words here."
+						/>
+					</a>
+					<a href="img/photo3.jpg">
+						<img data-bp="img/photo3.jpg" src="img/photo3_thumb.jpg" />
+					</a>
+				</div>
+				<p>
+					A gallery can also be opened from a single element using an array of
+					images.
+				</p>
+				<div class="flex">
+					<button class="btn logo-icon" id="unsplash_gallery">
+						Open remote unsplash images
+					</button>
+					<button class="btn logo-icon" id="unsplash_gallery_position">
+						Open at specific position
+					</button>
+				</div>
+			</div>
 
-    <div id="image_container" class="container">
-      <h3>Remote Image Gallery</h3>
-      <p>Click thumbnails to launch gallery. Loading spinner &amp; captions are built-in.</p>
-      <div class="flex">
-        <a href="img/photo1.jpg">
-          <img data-bp="img/photo1.jpg" src="img/photo1_thumb.jpg">
-        </a>
-        <a href="img/photo7.jpg">
-          <img data-bp="img/photo7.jpg" src="img/photo7_thumb.jpg">
-        </a>
-        <a href="img/photo2.jpg">
-          <img data-bp="img/photo2.jpg" src="img/photo2_thumb.jpg" data-caption="Example of an optional caption. You can put words here.">
-        </a>
-        <a href="img/photo3.jpg">
-          <img data-bp="img/photo3.jpg" src="img/photo3_thumb.jpg">
-        </a>
-      </div>
-      <p>A gallery can also be opened from a single element using an array of images.</p>
-      <div class="flex">
-        <button class="btn logo-icon" id="unsplash_gallery">Open remote unsplash images</button>
-        <button class="btn logo-icon" id="unsplash_gallery_position">Open at specific position</button>
-      </div>
-    </div>
+			<div id="video_container" class="container">
+				<h3>Videos / Embeds</h3>
+				<p>
+					Supports Youtube, Vimeo, direct video links,
+					<a
+						id="iframe_example"
+						href="https://secure.actblue.com/donate/bern-site"
+						class="text-trigger"
+						data-iframe="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/699739120&color=%232b9cd9&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+						>any iframe</a
+					>, as well as
+					<a
+						href="/audio/happy-step.mp3"
+						class="text-trigger"
+						id="audio_example"
+						data-caption="Nordgroove - Happy Step"
+						>audio files</a
+					>.
+				</p>
+				<div class="flex">
+					<div
+						class="vid htmlvid"
+						style="background-image:url(img/vid_towers.jpg)"
+						vidSrc="videos/towers.mp4"
+					></div>
+					<div
+						class="vid youtube twin-peaks"
+						style="background-image:url(https://i.ytimg.com/vi/8nHV2mOCIRA/mqdefault.jpg)"
+						ytSrc="X2lkvrMa27c"
+					></div>
+					<div
+						class="vid youtube"
+						style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)"
+						ytSrc="tU1b1H2EWU4"
+					></div>
+					<div
+						class="vid youtube"
+						style="background-image:url(https://i.ytimg.com/vi/z_PeaHVcohg/mqdefault.jpg)"
+						ytSrc="z_PeaHVcohg"
+					></div>
+					<div
+						class="vid vimeo"
+						style="background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)"
+						vimeoSrc="119287310"
+					></div>
+					<div
+						class="vid vimeo"
+						style="background-image:url(https://i.vimeocdn.com/video/554831823_350x200.jpg)"
+						vimeoSrc="154174852"
+					></div>
+				</div>
+			</div>
 
-    <div id="video_container" class="container">
-      <h3>Videos</h3>
-      <p>Supports Youtube, Vimeo, and direct links. (Also works with <a href="/audio/happy-step.mp3" class="text-trigger" id="audio_example" data-caption="Nordgroove - Happy Step">audio files</a>.)</p>
-      <div class="flex">
-        <div class="vid htmlvid" style="background-image:url(img/vid_towers.jpg)" vidSrc="videos/towers.mp4"></div>
-        <div class="vid iframevid" style="background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)" iframeSrc="https://www.youtube.com/embed/rTi9FKuMNKQ?html5=1&rel=0&playsinline=1&autoplay=1"></div>
-        <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/tU1b1H2EWU4/mqdefault.jpg)" ytSrc="tU1b1H2EWU4"></div>
-        <div class="vid youtube" style="background-image:url(https://i.ytimg.com/vi/z_PeaHVcohg/mqdefault.jpg)" ytSrc="z_PeaHVcohg"></div>
-        <div class="vid vimeo" style="background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)" vimeoSrc="119287310"></div>
-        <div class="vid vimeo" style="background-image:url(https://i.vimeocdn.com/video/554831823_350x200.jpg)" vimeoSrc="154174852"></div>
-      </div>
-    </div>
+			<div id="local_image_container" class="container">
+				<h3>Individual Images</h3>
+				<p>
+					Specify a remote source, or pass in an element alone in to enlarge its
+					current image.
+				</p>
+				<div class="flex">
+					<img src="img/background3.jpg" />
+					<img
+						src="img/background4.jpg"
+						data-caption="Another optional caption."
+					/>
+					<img src="img/background6.jpg" />
+				</div>
+				<p>Script grabs the background image automatically.</p>
+				<div id="background_images" class="flex">
+					<div
+						class="background-image"
+						style="background-image:url(img/background2.jpg)"
+					></div>
+					<div
+						class="background-image"
+						style="background-image:url(img/background5.jpg)"
+					></div>
+					<div
+						class="background-image"
+						style="background-image:url(img/background1.jpg)"
+						data-caption="You can use captions with any kind of element."
+					></div>
+				</div>
+			</div>
 
-    <div id="local_image_container" class="container">
-      <h3>Individual Images</h3>
-      <p>Specify a remote source, or pass in an element alone in to enlarge its current image.</p>
-      <div class="flex">
-        <img src="img/background3.jpg" />
-        <img src="img/background4.jpg" data-caption="Another optional caption." />
-        <img src="img/background6.jpg" />
-      </div>
-      <p>Script grabs the background image automatically.</p>
-      <div id="background_images" class="flex">
-        <div class="background-image" style="background-image:url(img/background2.jpg)"></div>
-        <div class="background-image" style="background-image:url(img/background5.jpg)"></div>
-        <div class="background-image" style="background-image:url(img/background1.jpg)" data-caption="You can use captions with any kind of element."></div>
-      </div>
-    </div>
+			<div class="container" id="broken_container">
+				<h3>Error Handling</h3>
+				<p>
+					By default, the user will receive an alert (this behavior can be
+					overriden).
+				</p>
+				<div class="flex">
+					<img id="broken_image" src="img/broken_thumb.jpg" />
+					<div
+						id="broken_vid"
+						class="vid htmlvid"
+						style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em"
+					></div>
+				</div>
+				<p>
+					If the vimeo / youtube URL is incorrect, the embed is shown with the
+					error.
+				</p>
+				<div class="flex">
+					<div
+						class="vid youtube"
+						style="width:480px;background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)"
+					></div>
+					<div
+						class="vid vimeo"
+						style="width:480px;background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)"
+					></div>
+				</div>
+			</div>
 
-    <div class="container" id="broken_container">
-      <h3>Error Handling</h3>
-      <p>By default, the user will receive an alert (this behavior can be overriden).</p>
-      <div class="flex">
-        <img id="broken_image" src="img/broken_thumb.jpg" />
-        <div id="broken_vid" class="vid htmlvid" style="background-image:url(img/vid_towers.jpg);width:480px;margin:.2em"></div>
-      </div>
-      <p>If the vimeo / youtube URL is incorrect, the embed is shown with the error.</p>
-      <div class="flex">
-        <div class="vid youtube" style="width:480px;background-image:url(https://i.vimeocdn.com/video/540194840_350x200.jpg)"></div>
-        <div class="vid vimeo" style="width:480px;background-image:url(https://i.vimeocdn.com/video/506473859_350x200.jpg)"></div>
-      </div>
-    </div>
+			<div class="credit">
+				<p>
+					All images found on
+					<a href="https://unsplash.com/">Unsplash</a>
+					<span>|</span> "Towers of Pfeiffer" video by
+					<a href="https://vimeo.com/grantporter">Grant Porter</a> (CC-BY)
+					<span>|</span> Music by
+					<a href="https://icons8.com/music/author/nordgroove">Nordgroove</a>
+					via <a href="https://icons8.com/music">Fugue</a>
+				</p>
+			</div>
+		</div>
 
-    <div class="credit">
-      <p>All images found on
-        <a href="https://unsplash.com/">Unsplash</a>
-        <span>|</span> "Towers of Pfeiffer" video by
-        <a href="https://vimeo.com/grantporter">Grant Porter</a> (CC-BY)
-        <span>|</span> Music by <a href="https://icons8.com/music/author/nordgroove">Nordgroove</a> via <a href="https://icons8.com/music">Fugue</a>
-      </p>
-    </div>
-  </div>
+		<script src="js/BigPicture.js"></script>
 
-  <script src="js/BigPicture.js"></script>
+		<script>
+			;(function() {
+				// four image gallery
+				var imageLinks = document.querySelectorAll('#image_container a')
+				for (var i = 0; i < imageLinks.length; i++) {
+					imageLinks[i].addEventListener('click', function(e) {
+						e.preventDefault()
+						BigPicture({
+							el: e.target,
+							gallery: '#image_container',
+						})
+					})
+				}
 
-  <script>
-    (function () {
+				// unsplash gallery
+				var unsplashImages = [
+					'meiying',
+					'clemono2',
+					'heftiba',
+					'westbeach013',
+					'anniespratt',
+					'camylla93',
+					'nathananderson',
+					'aaronburden',
+					'elke_karin',
+					'scottwebb',
+					'lucabravo',
+					'neonbrand',
+				].map(function(user) {
+					return {
+						src: 'https://source.unsplash.com/user/' + user + '/daily',
+					}
+				})
+				document.getElementById('unsplash_gallery').onclick = function() {
+					BigPicture({
+						el: this,
+						gallery: unsplashImages,
+					})
+				}
 
-      // four image gallery
-      var imageLinks = document.querySelectorAll('#image_container a')
-      for (var i = 0; i < imageLinks.length; i++) {
-        imageLinks[i].addEventListener('click', function (e) {
-          e.preventDefault()
-          BigPicture({
-            el: e.target,
-            gallery: '#image_container'
-          });
-        })
-      }
+				document.getElementById(
+					'unsplash_gallery_position'
+				).onclick = function() {
+					BigPicture({
+						el: this,
+						position: 6,
+						gallery: unsplashImages,
+					})
+				}
 
-      // unsplash gallery
-      var unsplashImages = ['meiying', 'clemono2', 'heftiba', 'westbeach013', 'anniespratt', 'camylla93', 'nathananderson', 'aaronburden', 'elke_karin', 'scottwebb', 'lucabravo', 'neonbrand'].map(function (user) {
-        return {
-          src: 'https://source.unsplash.com/user/' + user + '/daily'
-        }
-      })
-      document.getElementById('unsplash_gallery').onclick = function () {
-        BigPicture({
-          el: this,
-          gallery: unsplashImages
-        })
-      }
+				// other stuff
+				function setClickHandler(id, fn) {
+					document.getElementById(id).onclick = fn
+				}
 
-      document.getElementById('unsplash_gallery_position').onclick = function () {
-        BigPicture({
-          el: this,
-          position: 6,
-          gallery: unsplashImages
-        })
-      }
+				setClickHandler('local_image_container', function(e) {
+					;(e.target.tagName === 'IMG' ||
+						e.target.className === 'background-image') &&
+						BigPicture({
+							el: e.target,
+						})
+				})
 
-      // other stuff
-      function setClickHandler(id, fn) {
-        document.getElementById(id).onclick = fn;
-      }
+				setClickHandler('video_container', function(e) {
+					var className = e.target.className
+					if (~className.indexOf('htmlvid')) {
+						BigPicture({
+							el: e.target,
+							vidSrc: e.target.getAttribute('vidSrc'),
+						})
+					} else if (~className.indexOf('vimeo')) {
+						BigPicture({
+							el: e.target,
+							vimeoSrc: e.target.getAttribute('vimeoSrc'),
+						})
+					} else if (~className.indexOf('twin-peaks')) {
+						BigPicture({
+							el: e.target,
+							ytSrc: e.target.getAttribute('ytSrc'),
+							dimensions: [1226, 900],
+						})
+					} else if (~className.indexOf('youtube')) {
+						BigPicture({
+							el: e.target,
+							ytSrc: e.target.getAttribute('ytSrc'),
+						})
+					}
+				})
 
-      setClickHandler('local_image_container', function (e) {
-        (e.target.tagName === 'IMG' || e.target.className === 'background-image') &&
-          BigPicture({
-            el: e.target
-          });
-      });
+				setClickHandler('broken_container', function(e) {
+					e.target.id === 'broken_image' &&
+						BigPicture({
+							el: e.target,
+							imgSrc: '/nopic.jpg',
+						})
+					e.target.id === 'broken_vid' &&
+						BigPicture({
+							el: e.target,
+							vidSrc: '/novid.mp4',
+						})
+					~e.target.className.indexOf('vimeo') &&
+						BigPicture({
+							el: e.target,
+							vimeoSrc: 'ajoiejlkr',
+						})
+					~e.target.className.indexOf('youtube') &&
+						BigPicture({
+							el: e.target,
+							ytSrc: 'oijlksdjf',
+						})
+				})
 
-      setClickHandler('video_container', function (e) {
-        var className = e.target.className;
-        ~className.indexOf('htmlvid') &&
-          BigPicture({
-            el: e.target,
-            vidSrc: e.target.getAttribute('vidSrc')
-          });
-        ~className.indexOf('iframevid') &&
-          BigPicture({
-            el: e.target,
-            iframeSrc: e.target.getAttribute('iframeSrc')
-          });
-        ~className.indexOf('vimeo') &&
-          BigPicture({
-            el: e.target,
-            vimeoSrc: e.target.getAttribute('vimeoSrc')
-          });
-        ~className.indexOf('youtube') &&
-          BigPicture({
-            el: e.target,
-            ytSrc: e.target.getAttribute('ytSrc')
-          });
-      })
+				setClickHandler('iframe_example', function(e) {
+					e.preventDefault()
+					BigPicture({
+						el: e.target,
+						iframeSrc: e.target.getAttribute('data-iframe'),
+						dimensions: [800, 800],
+					})
+				})
 
-      setClickHandler('broken_container', function (e) {
-        e.target.id === 'broken_image' &&
-          BigPicture({
-            el: e.target,
-            imgSrc: '/nopic.jpg'
-          });
-        e.target.id === 'broken_vid' &&
-          BigPicture({
-            el: e.target,
-            vidSrc: '/novid.mp4'
-          });
-        ~e.target.className.indexOf('vimeo') &&
-          BigPicture({
-            el: e.target,
-            vimeoSrc: 'ajoiejlkr'
-          })
-        ~e.target.className.indexOf('youtube') &&
-          BigPicture({
-            el: e.target,
-            ytSrc: 'oijlksdjf'
-          })
-      });
-
-      setClickHandler('audio_example', function(e) {
-        e.preventDefault()
-        BigPicture({
-          el: this,
-          audio: '/audio/happy-step.mp3'
-        })
-      })
-    })();
-  </script>
-
-</body>
-
+				setClickHandler('audio_example', function(e) {
+					e.preventDefault()
+					BigPicture({
+						el: this,
+						audio: '/audio/happy-step.mp3',
+					})
+				})
+			})()
+		</script>
+	</body>
 </html>

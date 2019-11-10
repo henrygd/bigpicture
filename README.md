@@ -2,7 +2,7 @@
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-Lightweight (3.5 KB gzip) and framework independent JavaScript image / video viewer.
+Lightweight (3.77 KB gzip) and framework independent JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
@@ -30,7 +30,7 @@ Or with a script tag:
 
 No additional CSS file is neccesary.
 
-When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `this` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
+When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `e.target` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
 
 ##### Remote video file
 
@@ -38,10 +38,10 @@ Multiple sources supported as of 1.4.0
 
 ```javascript
 BigPicture({
-  el: this,
-  vidSrc: 'http://yourvideo.mp4'
+  el: e.target,
+  vidSrc: 'https://yourvideo.mp4'
   // or with multiple sources
-  // vidSrc: ['http://yourvideo.mp4', 'http://yourvideo.webm']
+  // vidSrc: ['https://yourvideo.mp4', 'https://yourvideo.webm']
 })
 ```
 
@@ -51,7 +51,7 @@ Pass in the video ID from the url. For example, the ID for `https://www.youtube.
 
 ```javascript
 BigPicture({
-  el: this,
+  el: e.target,
   ytSrc: 'z_PeaHVcohg'
 })
 ```
@@ -62,7 +62,7 @@ Like Youtube, pass in the video ID from the url. The ID for `https://vimeo.com/1
 
 ```javascript
 BigPicture({
-  el: this,
+  el: e.target,
   vimeoSrc: '119287310'
 })
 ```
@@ -73,8 +73,8 @@ Pass in the URL from the iframe.
 
 ```javascript
 BigPicture({
-  el: this,
-  iframeSrc: 'http://youriframe.html'
+  el: e.target,
+  iframeSrc: 'https://youriframe.html'
 })
 ```
 
@@ -82,8 +82,8 @@ BigPicture({
 
 ```javascript
 BigPicture({
-  el: this,
-  audio: 'http://youraudio.mp3'
+  el: e.target,
+  audio: 'https://youraudio.mp3'
 })
 ```
 
@@ -91,8 +91,8 @@ BigPicture({
 
 ```javascript
 BigPicture({
-  el: this,
-  imgSrc: 'http://yourimage.jpg'
+  el: e.target,
+  imgSrc: 'https://yourimage.jpg'
 })
 ```
 
@@ -102,7 +102,7 @@ If your trigger element is an image or an element with a background image, you c
 
 ```javascript
 BigPicture({
-  el: this
+  el: e.target
 })
 ```
 
@@ -121,14 +121,14 @@ Add a `data-bp` attribute to your elements with the image you want to open, and 
 ```javascript
 // opens gallery w/ all three images
 BigPicture({
-  el: this,
+  el: e.target,
   gallery: '#image_container'
 })
 ```
 ```javascript
 // opens gallery w/ the two images matching the selector
 BigPicture({
-  el: this,
+  el: e.target,
   gallery: document.querySelectorAll('#image_container .example')
 })
 ```
@@ -143,7 +143,7 @@ var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
   }
 })
 BigPicture({
-  el: this,
+  el: e.target,
   gallery: unsplashImages,
   // optionally specify a starting index
   position: 2
@@ -153,7 +153,7 @@ BigPicture({
 You can also loop the gallery (next on last image gives you the first image, and vice versa).
 ```javascript
 BigPicture({
-  el: this,
+  el: e.target,
   gallery: '#image_container',
   loop: true
 })
@@ -178,7 +178,7 @@ To display a caption, add a `data-caption` attribute with the desired text or HT
 ```javascript
 // example of how scrolling can be disabled using callbacks
 BigPicture({
-  el: this,
+  el: e.target,
   animationStart: function() {
     // executed immediately before open animation starts
     document.documentElement.style.overflowY = 'hidden'
@@ -206,9 +206,21 @@ If you're loading remote images or videos and don't want the default loading ico
 
 ```javascript
 BigPicture({
-  el: this,
+  el: e.target,
   vimeoSrc: '119287310',
   noLoader: true
+})
+```
+
+## Change dimensions of embed / youtube / vimeo
+
+By default, embeds are displayed in 16:9 aspect at a maximum of 1600px by 900px. To change this, supply an array with width and height in pixels. Default is `[1600, 900]`.
+
+```javascript
+BigPicture({
+	el: e.target,
+	ytSrc: 'X2lkvrMa27c',
+	dimensions: [1226, 900]
 })
 ```
 
@@ -218,7 +230,7 @@ You may override the default error alert for images, audio, and direct video lin
 
 ```javascript
 BigPicture({
-  el: this,
+  el: e.target,
   onError: function() {
     console.log('there was an error')
   }
