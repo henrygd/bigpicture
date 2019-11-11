@@ -2,11 +2,7 @@
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-3.7 kB gzip vanilla JavaScript image / video viewer.
-
-Supports Youtube, Vimeo, and direct video links.
-
-Doesn't sit on the DOM when inactive.
+3.7 kB gzip vanilla JavaScript image / video viewer. Doesn't sit on the DOM when inactive.
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
 
