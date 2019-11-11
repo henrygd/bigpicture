@@ -32,7 +32,7 @@ No additional CSS file is neccesary.
 
 When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `e.target` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
 
-##### Remote video file
+### Remote video file
 
 Multiple sources supported as of 1.4.0
 
@@ -45,7 +45,7 @@ BigPicture({
 })
 ```
 
-##### Youtube
+### Youtube
 
 Pass in the video ID from the url. For example, the ID for `https://www.youtube.com/watch?v=z_PeaHVcohg` would be `z_PeaHVcohg` (The `v` parameter in the address).
 
@@ -56,7 +56,7 @@ BigPicture({
 })
 ```
 
-##### Vimeo
+### Vimeo
 
 Like Youtube, pass in the video ID from the url. The ID for `https://vimeo.com/119287310` would be `119287310`.
 
@@ -67,7 +67,7 @@ BigPicture({
 })
 ```
 
-##### iframe
+### iframe embed
 
 Pass in the URL from the iframe.
 
@@ -78,7 +78,7 @@ BigPicture({
 })
 ```
 
-##### Audio
+### Audio
 
 ```javascript
 BigPicture({
@@ -87,7 +87,7 @@ BigPicture({
 })
 ```
 
-##### Remote individual image
+### Remote individual image
 
 ```javascript
 BigPicture({
@@ -96,7 +96,7 @@ BigPicture({
 })
 ```
 
-##### Local images & background images
+### Local images & background images
 
 If your trigger element is an image or an element with a background image, you can open it directly by passing it alone.
 
@@ -106,7 +106,7 @@ BigPicture({
 })
 ```
 
-##### Galleries
+### Galleries
 
 Add a `data-bp` attribute to your elements with the image you want to open, and pass a selector string or NodeList to the function. The string should specify a container which has `data-bp` elements somewhere inside, whereas the NodeList should be the elements themselves.
 
@@ -239,7 +239,7 @@ BigPicture({
 })
 ```
 
-### Troubleshooting
+## Troubleshooting
 
 If the media or loading icon fails to display, it's probably a z-index issue. The media container has a default z-index of 9999, and the loading icon has a z-index of 9 relative to the trigger element's parent container.
 
