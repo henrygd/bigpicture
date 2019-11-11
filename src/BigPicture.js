@@ -186,7 +186,7 @@ function initialize() {
 		const el = document[createEl]('button')
 		el.className = className
 		el.innerHTML =
-			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>'
+			'<svg viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>'
 		return el
 	}
 
@@ -194,7 +194,7 @@ function initialize() {
 		const el = document[createEl]('button')
 		el.className = 'bp-lr'
 		el.innerHTML =
-			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>'
+			'<svg viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>'
 		changeCSS(el, style)
 		el.onclick = e => {
 			e.stopPropagation()
@@ -206,7 +206,7 @@ function initialize() {
 	// add style - if you want to tweak, run through beautifier
 	const style = document[createEl]('STYLE')
 	style.innerHTML =
-		'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;align-items:center;cursor:wait;z-index:9}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{background:#111}#bp_sv svg{width:80px}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0 0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}'
+		'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;align-items:center;cursor:wait;background:0;z-index:9}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{background:#111}#bp_sv svg{width:66px}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}'
 	document.head[appendEl](style)
 
 	// create container element
@@ -274,7 +274,7 @@ function initialize() {
 	loadingIcon = document[createEl]('DIV')
 	loadingIcon.id = 'bp_loader'
 	loadingIcon.innerHTML =
-		'<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>'
+		'<svg viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>'
 	// create youtube / vimeo container
 	iframeContainer = document[createEl]('DIV')
 	iframeContainer.id = 'bp_sv'
@@ -527,39 +527,39 @@ function createIframe() {
 		url = opts.iframeSrc
 	}
 
+	// add loading spinner to iframe container
+	changeCSS(loadingIcon, '')
+	iframeContainer[appendEl](loadingIcon)
+
 	// set iframe src to url
 	iframeSiteVid.src = url
 
 	updateIframeDimensions()
 
-	setTimeout(() => {
-		changeCSS(loadingIcon, '')
-		iframeContainer[appendEl](loadingIcon)
-		open()
-	}, 9)
+	setTimeout(open, 9)
 }
 
 function updateIframeDimensions() {
 	let height
 	let width
+
 	// handle height / width / aspect / max width for iframe
 	const windowHeight = window.innerHeight * 0.95
 	const windowWidth = window.innerWidth * 0.95
 	const windowAspect = windowHeight / windowWidth
 
-	const dimensions = opts.dimensions || [1600, 900]
-	let dimensionHeight = dimensions[1]
-	let dimensionWidth = dimensions[0]
+	const [dimensionWidth, dimensionHeight] = opts.dimensions || [1920, 1080]
 
 	const iframeAspect = dimensionHeight / dimensionWidth
 
 	if (iframeAspect > windowAspect) {
-		height = Math.min(dimensions[1], windowHeight)
-		width = (dimensions[0] / dimensions[1]) * height
+		height = Math.min(dimensionHeight, windowHeight)
+		width = height / iframeAspect
 	} else {
-		width = Math.min(dimensions[0], windowWidth)
-		height = (dimensions[1] / dimensions[0]) * width
+		width = Math.min(dimensionWidth, windowWidth)
+		height = width * iframeAspect
 	}
+
 	iframeContainer.style.cssText += `width:${width}px;height:${height}px;`
 }
 
@@ -688,17 +688,17 @@ function close(e) {
 
 // remove container / display element from the DOM
 function removeContainer() {
+	// clear src of displayElement (or iframe if display el is iframe container)
+	// needs to be done before removing container in IE
+	let srcEl =
+		displayElement === iframeContainer ? iframeSiteVid : displayElement
+	srcEl.removeAttribute('src')
+
 	// remove container from DOM & clear inline style
 	document.body[removeEl](container)
 	container[removeEl](displayElement)
 	changeCSS(container, '')
 	changeCSS(displayElement, '')
-
-	// clear src of displayElement (or iframe if display el is iframe container)
-	;(displayElement === iframeContainer
-		? iframeSiteVid
-		: displayElement
-	).removeAttribute('src')
 
 	// remove caption
 	toggleCaption(false)

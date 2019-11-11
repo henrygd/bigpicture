@@ -1,89 +1,114 @@
-// BigPicture.js | license MIT | henrygd.me/bigpicture
-(function() {
-	var // assign window object to variable
-		global = window,
-		// trigger element used to open popup
-		el,
-		// set to true after first interaction
-		initialized,
-		// container element holding html needed for script
-		container,
-		// currently active display element (image, video, youtube / vimeo iframe container)
-		displayElement,
-		// popup image element
-		displayImage,
-		// popup video element
-		displayVideo,
-		// popup audio element
-		displayAudio,
-		// container element to hold youtube / vimeo iframe
-		iframeContainer,
-		// iframe to hold youtube / vimeo player
-		iframeSiteVid,
-		// store requested image source
-		imgSrc,
-		// button that closes the container
-		closeButton,
-		// youtube / vimeo video id
-		siteVidID,
-		// keeps track of loading icon display state
-		isLoading,
-		// timeout to check video status while loading
-		checkMediaTimeout,
-		// loading icon element
-		loadingIcon,
-		// caption element
-		caption,
-		// caption content element
-		captionText,
-		// store caption content
-		captionContent,
-		// hide caption button element
-		captionHideButton,
-		// open state for container element
-		isOpen,
-		// gallery open state
-		galleryOpen,
-		// used during close animation to avoid triggering timeout twice
-		isClosing,
-		// array of prev viewed image urls to check if cached before showing loading icon
-		imgCache = [],
-		// store whether image requested is remote or local
-		remoteImage,
-		// store animation opening callbacks
-		animationStart,
-		animationEnd,
-		// store changeGalleryImage callback
-		onChangeImage,
-		// gallery left / right icons
-		rightArrowBtn,
-		leftArrowBtn,
-		// position of gallery
-		galleryPosition,
-		// hold active gallery els / image src
-		galleryEls,
-		// counter element
-		galleryCounter,
-		// store images in gallery that are being loaded
-		preloadedImages = {},
-		// whether device supports touch events
-		supportsTouch,
-		// options object
-		opts,
-		// Save bytes in the minified version
-		doc = document,
-		appendEl = 'appendChild',
-		createEl = 'createElement',
-		removeEl = 'removeChild',
-		htmlInner = 'innerHTML',
-		pointerEventsAuto = 'pointer-events:auto',
-		cHeight = 'clientHeight',
-		cWidth = 'clientWidth',
-		listenFor = 'addEventListener',
-		timeout = global.setTimeout,
-		clearTimeout = global.clearTimeout;
+var BigPicture = (function () {
+	// BigPicture.js | license MIT | henrygd.me/bigpicture
 
-	global.BigPicture = function(options) {
+	// trigger element used to open popup
+	var el;
+
+	// set to true after first interaction
+	var initialized;
+
+	// container element holding html needed for script
+	var container;
+
+	// currently active display element (image, video, youtube / vimeo iframe container)
+	var displayElement;
+
+	// popup image element
+	var displayImage;
+
+	// popup video element
+	var displayVideo;
+
+	// popup audio element
+	var displayAudio;
+
+	// container element to hold youtube / vimeo iframe
+	var iframeContainer;
+
+	// iframe to hold youtube / vimeo player
+	var iframeSiteVid;
+
+	// store requested image source
+	var imgSrc;
+
+	// button that closes the container
+	var closeButton;
+
+	// youtube / vimeo video id
+	var siteVidID;
+
+	// keeps track of loading icon display state
+	var isLoading;
+
+	// timeout to check video status while loading
+	var checkMediaTimeout;
+
+	// loading icon element
+	var loadingIcon;
+
+	// caption element
+	var caption;
+
+	// caption content element
+	var captionText;
+
+	// store caption content
+	var captionContent;
+
+	// hide caption button element
+	var captionHideButton;
+
+	// open state for container element
+	var isOpen;
+
+	// gallery open state
+	var galleryOpen;
+
+	// used during close animation to avoid triggering timeout twice
+	var isClosing;
+
+	// array of prev viewed image urls to check if cached before showing loading icon
+	var imgCache = [];
+
+	// store whether image requested is remote or local
+	var remoteImage;
+
+	// store animation opening callbacks
+	var animationStart;
+	var animationEnd;
+
+	// store changeGalleryImage callback
+	var onChangeImage;
+
+	// gallery left / right icons
+	var rightArrowBtn;
+
+	var leftArrowBtn;
+
+	// position of gallery
+	var galleryPosition;
+
+	// hold active gallery els / image src
+	var galleryEls;
+
+	// counter element
+	var galleryCounter;
+
+	// store images in gallery that are being loaded
+	var preloadedImages = {};
+
+	// whether device supports touch events
+	var supportsTouch;
+
+	// options object
+	var opts;
+
+	// Save bytes in the minified version
+	var appendEl = 'appendChild';
+	var createEl = 'createElement';
+	var removeEl = 'removeChild';
+
+	function BigPicture (options) {
 		// initialize called on initial open to create elements / style / event handlers
 		initialized || initialize();
 
@@ -116,7 +141,7 @@
 			makeGallery(options.gallery, options.position);
 		} else if (siteVidID || options.iframeSrc) {
 			// if vimeo, youtube, or iframe video
-			toggleLoadingIcon(true);
+			// toggleLoadingIcon(true)
 			displayElement = iframeContainer;
 			createIframe();
 		} else if (options.imgSrc) {
@@ -144,68 +169,71 @@
 			displayElement.src =
 				el.tagName === 'IMG'
 					? el.src
-					: global
+					: window
 							.getComputedStyle(el)
 							.backgroundImage.replace(/^url|[(|)|'|"]/g, '');
 		}
 
 		// add container to page
 		container[appendEl](displayElement);
-		doc.body[appendEl](container);
-	};
+		document.body[appendEl](container);
+	}
 
 	// create all needed methods / store dom elements on first use
 	function initialize() {
 		var startX;
 		// return close button elements
 		function createCloseButton(className) {
-			var el = doc[createEl]('button');
+			var el = document[createEl]('button');
 			el.className = className;
-			el[htmlInner] =
-				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>';
-			return el;
+			el.innerHTML =
+				'<svg viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>';
+			return el
 		}
 
 		function createArrowSymbol(direction, style) {
-			var el = doc[createEl]('button');
+			var el = document[createEl]('button');
 			el.className = 'bp-lr';
-			el[htmlInner] =
-				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>';
+			el.innerHTML =
+				'<svg viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>';
 			changeCSS(el, style);
-			el.onclick = function(e) {
+			el.onclick = function (e) {
 				e.stopPropagation();
 				updateGallery(direction);
 			};
-			return el;
+			return el
 		}
 
 		// add style - if you want to tweak, run through beautifier
-		var style = doc[createEl]('STYLE');
-		style[htmlInner] =
-			'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;margin:0;cursor:wait;z-index:9;background:0 0}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{height:0;padding-bottom:54%;background-color:#000;width:96%}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0 0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0 0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}@media (min-aspect-ratio:9/5){#bp_sv{height:98%;width:170.6vh;padding:0}}';
-		doc.head[appendEl](style);
+		var style = document[createEl]('STYLE');
+		style.innerHTML =
+			'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;align-items:center;cursor:wait;background:0;z-index:9}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{background:#111}#bp_sv svg{width:66px}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}';
+		document.head[appendEl](style);
 
 		// create container element
-		container = doc[createEl]('DIV');
+		container = document[createEl]('DIV');
 		container.id = 'bp_container';
 		container.onclick = close;
 		closeButton = createCloseButton('bp-x');
 		container[appendEl](closeButton);
 		// gallery swipe listeners
-		if ('ontouchstart' in global) {
+		if ('ontouchstart' in window) {
 			supportsTouch = true;
-			container.ontouchstart = function(e) {
-				startX = e.changedTouches[0].pageX;
+			container.ontouchstart = function (ref) {
+				var changedTouches = ref.changedTouches;
+
+				startX = changedTouches[0].pageX;
 			};
-			container.ontouchmove = function(e) {
+			container.ontouchmove = function (e) {
 				e.preventDefault();
 			};
-			container.ontouchend = function(e) {
+			container.ontouchend = function (ref) {
+				var changedTouches = ref.changedTouches;
+
 				if (!galleryOpen) {
-					return;
+					return
 				}
-				var touchobj = e.changedTouches[0];
-				var distX = touchobj.pageX - startX;
+				var distX = changedTouches[0].pageX - startX;
 				// swipe right
 				distX < -30 && updateGallery(1);
 				// swipe left
@@ -214,32 +242,32 @@
 		}
 
 		// create display image element
-		displayImage = doc[createEl]('IMG');
+		displayImage = document[createEl]('IMG');
 
 		// create display video element
-		displayVideo = doc[createEl]('VIDEO');
+		displayVideo = document[createEl]('VIDEO');
 		displayVideo.id = 'bp_vid';
 		displayVideo.setAttribute('playsinline', true);
 		displayVideo.controls = true;
 		displayVideo.loop = true;
 
 		// create audio element
-		displayAudio = doc[createEl]('audio');
+		displayAudio = document[createEl]('audio');
 		displayAudio.id = 'bp_aud';
 		displayAudio.controls = true;
 		displayAudio.loop = true;
 
 		// create gallery counter
-		galleryCounter = doc[createEl]('span');
+		galleryCounter = document[createEl]('span');
 		galleryCounter.id = 'bp_count';
 
 		// create caption elements
-		caption = doc[createEl]('DIV');
+		caption = document[createEl]('DIV');
 		caption.id = 'bp_caption';
 		captionHideButton = createCloseButton('bp-xc');
 		captionHideButton.onclick = toggleCaption.bind(null, false);
 		caption[appendEl](captionHideButton);
-		captionText = doc[createEl]('SPAN');
+		captionText = document[createEl]('SPAN');
 		caption[appendEl](captionText);
 		container[appendEl](caption);
 
@@ -248,19 +276,19 @@
 		leftArrowBtn = createArrowSymbol(-1, 'left:0;right:auto');
 
 		// create loading icon element
-		loadingIcon = doc[createEl]('DIV');
+		loadingIcon = document[createEl]('DIV');
 		loadingIcon.id = 'bp_loader';
-		loadingIcon[htmlInner] =
-			'<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>';
+		loadingIcon.innerHTML =
+			'<svg viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>';
 		// create youtube / vimeo container
-		iframeContainer = doc[createEl]('DIV');
+		iframeContainer = document[createEl]('DIV');
 		iframeContainer.id = 'bp_sv';
 
 		// create iframe to hold youtube / vimeo player
-		iframeSiteVid = doc[createEl]('IFRAME');
+		iframeSiteVid = document[createEl]('IFRAME');
 		iframeSiteVid.setAttribute('allowfullscreen', true);
 		iframeSiteVid.allow = 'autoplay; fullscreen';
-		iframeSiteVid.onload = open;
+		iframeSiteVid.onload = function () { return iframeContainer[removeEl](loadingIcon); };
 		changeCSS(
 			iframeSiteVid,
 			'border:0;position:absolute;height:100%;width:100%;left:0;top:0'
@@ -271,24 +299,27 @@
 		displayImage.onload = open;
 		displayImage.onerror = open.bind(null, 'image');
 
-		// adjust loader position on window resize
-		global[listenFor]('resize', function() {
+		window.addEventListener('resize', function () {
+			// adjust loader position on window resize
 			galleryOpen || (isLoading && toggleLoadingIcon(true));
+			// adjust iframe dimensions
+			displayElement === iframeContainer && updateIframeDimensions();
 		});
 
 		// close container on escape key press and arrow buttons for gallery
-		doc[listenFor]('keyup', function(e) {
-			var key = e.keyCode;
-			key === 27 && isOpen && close(container);
+		document.addEventListener('keyup', function (ref) {
+			var keyCode = ref.keyCode;
+
+			keyCode === 27 && isOpen && close(container);
 			if (galleryOpen) {
-				key === 39 && updateGallery(1);
-				key === 37 && updateGallery(-1);
-				key === 38 && updateGallery(10);
-				key === 40 && updateGallery(-10);
+				keyCode === 39 && updateGallery(1);
+				keyCode === 37 && updateGallery(-1);
+				keyCode === 38 && updateGallery(10);
+				keyCode === 40 && updateGallery(-10);
 			}
 		});
 		// prevent scrolling with arrow keys if gallery open
-		doc[listenFor]('keydown', function(e) {
+		document.addEventListener('keydown', function (e) {
 			var usedKeys = [37, 38, 39, 40];
 			if (galleryOpen && ~usedKeys.indexOf(e.keyCode)) {
 				e.preventDefault();
@@ -296,9 +327,9 @@
 		});
 
 		// trap focus within conainer while open
-		doc[listenFor](
+		document.addEventListener(
 			'focus',
-			function(e) {
+			function (e) {
 				if (isOpen && !container.contains(e.target)) {
 					e.stopPropagation();
 					closeButton.focus();
@@ -313,31 +344,25 @@
 
 	// return transform style to make full size display el match trigger el size
 	function getRect() {
-		var rect = el.getBoundingClientRect();
-		var leftOffset = rect.left - (container[cWidth] - rect.width) / 2;
-		var centerTop = rect.top - (container[cHeight] - rect.height) / 2;
-		var scaleWidth = el[cWidth] / displayElement[cWidth];
-		var scaleHeight = el[cHeight] / displayElement[cHeight];
-		return (
-			'transform:translate3D(' +
-			leftOffset +
-			'px, ' +
-			centerTop +
-			'px, 0) scale3D(' +
-			scaleWidth +
-			', ' +
-			scaleHeight +
-			', 0)'
-		);
+		var ref = el.getBoundingClientRect();
+		var top = ref.top;
+		var left = ref.left;
+		var width = ref.width;
+		var height = ref.height;
+		var leftOffset = left - (container.clientWidth - width) / 2;
+		var centerTop = top - (container.clientHeight - height) / 2;
+		var scaleWidth = el.clientWidth / displayElement.clientWidth;
+		var scaleHeight = el.clientHeight / displayElement.clientHeight;
+		return ("transform:translate3D(" + leftOffset + "px, " + centerTop + "px, 0) scale3D(" + scaleWidth + ", " + scaleHeight + ", 0)")
 	}
 
 	function makeVidSrc(source) {
 		if (Array.isArray(source)) {
 			displayElement = displayVideo.cloneNode();
-			source.forEach(function(src) {
-				var source = doc[createEl]('SOURCE');
+			source.forEach(function (src) {
+				var source = document[createEl]('SOURCE');
 				source.src = src;
-				source.type = 'video/' + src.match(/.(\w+)$/)[1];
+				source.type = "video/" + (src.match(/.(\w+)$/)[1]);
 				displayElement[appendEl](source);
 			});
 		} else {
@@ -356,20 +381,19 @@
 			// is element selector or nodelist
 			galleryEls = [].slice.call(
 				typeof gallery === 'string'
-					? doc.querySelectorAll(gallery + ' [data-bp]')
+					? document.querySelectorAll((gallery + " [data-bp]"))
 					: gallery
 			);
 			// find initial gallery position
 			var elIndex = galleryEls.indexOf(el);
-			galleryPosition = (position === 0 || position) ? position : (elIndex !== -1 ? elIndex : 0);
+			galleryPosition =
+				position === 0 || position ? position : elIndex !== -1 ? elIndex : 0;
 			// make gallery object w/ els / src / caption
-			galleryEls = galleryEls.map(function(el) {
-				return {
-					el: el,
-					src: el.getAttribute('data-bp'),
-					caption: el.getAttribute('data-caption'),
-				};
-			});
+			galleryEls = galleryEls.map(function (el) { return ({
+				el: el,
+				src: el.getAttribute('data-bp'),
+				caption: el.getAttribute('data-caption'),
+			}); });
 		}
 		// show loading icon if needed
 		remoteImage = true;
@@ -379,7 +403,7 @@
 		if (galleryEls.length > 1) {
 			// if length is greater than one, add gallery stuff
 			container[appendEl](galleryCounter);
-			galleryCounter[htmlInner] = galleryPosition + 1 + '/' + galleryEls.length;
+			galleryCounter.innerHTML = (galleryPosition + 1) + "/" + (galleryEls.length);
 			if (!supportsTouch) {
 				// add arrows if device doesn't support touch
 				container[appendEl](rightArrowBtn);
@@ -399,7 +423,7 @@
 
 		// only allow one change at a time
 		if (isLoading) {
-			return;
+			return
 		}
 
 		// return if requesting out of range image
@@ -410,15 +434,13 @@
 			// if beginning or end of gallery, run end animation
 			if (!opts.loop) {
 				changeCSS(displayImage, '');
-				timeout(
+				setTimeout(
 					changeCSS,
 					9,
 					displayImage,
-					'animation:' +
-						(movement > 0 ? 'bpl' : 'bpf') +
-						' .3s;transition:transform .35s'
+					("animation:" + (movement > 0 ? 'bpl' : 'bpf') + " .3s;transition:transform .35s")
 				);
-				return;
+				return
 			}
 			// if gallery is looped, adjust position to beginning / end
 			galleryPosition = movement > 0 ? -1 : galleryLength + 1;
@@ -428,36 +450,36 @@
 		galleryPosition = Math.max(
 			0,
 			Math.min(galleryPosition + movement, galleryLength)
-		);
+		)
 
 		// load images before and after for quicker scrolling through pictures
-		[galleryPosition - 1, galleryPosition, galleryPosition + 1].forEach(
-			function(position) {
+		;[galleryPosition - 1, galleryPosition, galleryPosition + 1].forEach(
+			function (position) {
 				// normalize position
 				position = Math.max(0, Math.min(position, galleryLength));
 				// cancel if image has already been preloaded
-				if (preloadedImages[position]) return;
+				if (preloadedImages[position]) { return }
 				var src = galleryEls[position].src;
 				// create image for preloadedImages
-				var img = doc[createEl]('IMG');
-				img[listenFor]('load', addToImgCache.bind(null, src));
+				var img = document[createEl]('IMG');
+				img.addEventListener('load', addToImgCache.bind(null, src));
 				img.src = src;
 				preloadedImages[position] = img;
 			}
 		);
 		// if image is loaded, show it
 		if (preloadedImages[galleryPosition].complete) {
-			return changeGalleryImage(movement);
+			return changeGalleryImage(movement)
 		}
 		// if not, show loading icon and change when loaded
 		isLoading = true;
 		changeCSS(loadingIcon, 'opacity:.4;');
 		container[appendEl](loadingIcon);
-		preloadedImages[galleryPosition].onload = function() {
+		preloadedImages[galleryPosition].onload = function () {
 			galleryOpen && changeGalleryImage(movement);
 		};
 		// if error, store error object in el array
-		preloadedImages[galleryPosition].onerror = function() {
+		preloadedImages[galleryPosition].onerror = function () {
 			galleryEls[galleryPosition] = {
 				error: 'Error loading image',
 			};
@@ -480,14 +502,9 @@
 			displayImage = displayElement = preloadedImages[galleryPosition];
 			changeCSS(
 				displayImage,
-				'animation:' +
-					(movement > 0 ? 'bpfl' : 'bpfr') +
-					' .35s;transition:transform .35s'
+				("animation:" + (movement > 0 ? 'bpfl' : 'bpfr') + " .35s;transition:transform .35s")
 			);
-			changeCSS(
-				oldimg,
-				'animation:' + (movement > 0 ? 'bpfol' : 'bpfor') + ' .35s both'
-			);
+			changeCSS(oldimg, ("animation:" + (movement > 0 ? 'bpfol' : 'bpfor') + " .35s both"));
 			container[appendEl](displayImage);
 			// update el for closing animation
 			if (activeEl.el) {
@@ -495,7 +512,7 @@
 			}
 		}
 		// update counter
-		galleryCounter[htmlInner] = galleryPosition + 1 + '/' + galleryEls.length;
+		galleryCounter.innerHTML = (galleryPosition + 1) + "/" + (galleryEls.length);
 		// show / hide caption
 		toggleCaption(galleryEls[galleryPosition].caption);
 		// execute onChangeImage callback
@@ -510,20 +527,49 @@
 
 		// create appropriate url
 		if (opts.ytSrc) {
-			url =
-				prefix +
-				'www.youtube.com/embed/' +
-				siteVidID +
-				'?html5=1&rel=0&playsinline=1&' +
-				suffix;
+			url = prefix + "www.youtube.com/embed/" + siteVidID + "?html5=1&rel=0&playsinline=1&" + suffix;
 		} else if (opts.vimeoSrc) {
-			url = prefix + 'player.vimeo.com/video/' + siteVidID + '?' + suffix;
+			url = prefix + "player.vimeo.com/video/" + siteVidID + "?" + suffix;
 		} else if (opts.iframeSrc) {
 			url = opts.iframeSrc;
 		}
 
+		// add loading spinner to iframe container
+		changeCSS(loadingIcon, '');
+		iframeContainer[appendEl](loadingIcon);
+
 		// set iframe src to url
 		iframeSiteVid.src = url;
+
+		updateIframeDimensions();
+
+		setTimeout(open, 9);
+	}
+
+	function updateIframeDimensions() {
+		var height;
+		var width;
+
+		// handle height / width / aspect / max width for iframe
+		var windowHeight = window.innerHeight * 0.95;
+		var windowWidth = window.innerWidth * 0.95;
+		var windowAspect = windowHeight / windowWidth;
+
+		var ref = opts.dimensions || [1920, 1080];
+		var dimensionWidth = ref[0];
+		var dimensionHeight = ref[1];
+
+		var iframeAspect = dimensionHeight / dimensionWidth;
+
+		if (iframeAspect > windowAspect) {
+			height = Math.min(dimensionHeight, windowHeight);
+			width = height / iframeAspect;
+		} else {
+			width = Math.min(dimensionWidth, windowWidth);
+			height = width * iframeAspect;
+		}
+
+		iframeContainer.style.cssText += "width:" + width + "px;height:" + height + "px;";
 	}
 
 	// timeout to check video status while loading
@@ -531,31 +577,28 @@
 		if (~[1, 4].indexOf(displayElement.readyState)) {
 			open();
 			// short timeout to to make sure controls show in safari 11
-			timeout(function() {
+			setTimeout(function () {
 				displayElement.play();
 			}, 99);
-		} else if (displayElement.error) open(errMsg);
-		else checkMediaTimeout = timeout(checkMedia, 35, errMsg);
+		} else if (displayElement.error) {
+			open(errMsg);
+		} else {
+			checkMediaTimeout = setTimeout(checkMedia, 35, errMsg);
+		}
 	}
 
 	// hide / show loading icon
 	function toggleLoadingIcon(bool) {
 		// don't show loading icon if noLoader is specified
-		if (opts.noLoader) return;
+		if (opts.noLoader) {
+			return
+		}
 		// bool is true if we want to show icon, false if we want to remove
 		// change style to match trigger element dimensions if we want to show
 		bool &&
 			changeCSS(
 				loadingIcon,
-				'top:' +
-					el.offsetTop +
-					'px;left:' +
-					el.offsetLeft +
-					'px;height:' +
-					el[cHeight] +
-					'px;width:' +
-					el[cWidth] +
-					'px'
+				("top:" + (el.offsetTop) + "px;left:" + (el.offsetLeft) + "px;height:" + (el.clientHeight) + "px;width:" + (el.clientWidth) + "px")
 			);
 		// add or remove loader from DOM
 		el.parentElement[bool ? appendEl : removeEl](loadingIcon);
@@ -565,11 +608,11 @@
 	// hide & show caption
 	function toggleCaption(captionContent) {
 		if (captionContent) {
-			captionText[htmlInner] = captionContent;
+			captionText.innerHTML = captionContent;
 		}
 		changeCSS(
 			caption,
-			'opacity:' + (captionContent ? '1;' + pointerEventsAuto : '0')
+			("opacity:" + (captionContent ? "1;pointer-events:auto" : '0'))
 		);
 	}
 
@@ -590,29 +633,29 @@
 			removeContainer();
 			return opts.onError
 				? opts.onError()
-				: alert('Error: The requested ' + err + ' could not be loaded.');
+				: alert(("Error: The requested " + err + " could not be loaded."))
 		}
 
 		// if remote image is loaded, add url to imgCache array
 		remoteImage && addToImgCache(imgSrc);
 
 		// transform displayEl to match trigger el
-		changeCSS(displayElement, getRect());
+		displayElement.style.cssText += getRect();
 
 		// fade in container
-		changeCSS(container, 'opacity:1;' + pointerEventsAuto);
+		changeCSS(container, "opacity:1;pointer-events:auto");
 
 		// set animationEnd callback to run after animation ends (cleared if container closed)
-		animationEnd = timeout(animationEnd, 410);
+		animationEnd = setTimeout(animationEnd, 410);
 
 		isOpen = true;
 
 		galleryOpen = !!galleryEls;
 
 		// enlarge displayEl, fade in caption if hasCaption
-		timeout(function() {
-			changeCSS(displayElement, 'transition:transform .35s;transform:none');
-			captionContent && timeout(toggleCaption, 250, captionContent);
+		setTimeout(function () {
+			displayElement.style.cssText += 'transition:transform .35s;transform:none';
+			captionContent && setTimeout(toggleCaption, 250, captionContent);
 		}, 60);
 	}
 
@@ -627,23 +670,22 @@
 			captionText,
 			leftArrowBtn,
 			rightArrowBtn,
-			loadingIcon,
-		];
+			loadingIcon ];
 
 		// blur to hide close button focus style
 		target && target.blur();
 
 		// don't close if one of the clickEls was clicked or container is already closing
 		if (isClosing || ~clickEls.indexOf(target)) {
-			return;
+			return
 		}
 
 		// animate closing
 		displayElement.style.cssText += getRect();
-		changeCSS(container, pointerEventsAuto);
+		changeCSS(container, 'pointer-events:auto');
 
 		// timeout to remove els from dom; use variable to avoid calling more than once
-		timeout(removeContainer, 350);
+		setTimeout(removeContainer, 350);
 
 		// clear animationEnd timeout
 		clearTimeout(animationEnd);
@@ -654,16 +696,17 @@
 
 	// remove container / display element from the DOM
 	function removeContainer() {
+		// clear src of displayElement (or iframe if display el is iframe container)
+		// needs to be done before removing container in IE
+		var srcEl =
+			displayElement === iframeContainer ? iframeSiteVid : displayElement;
+		srcEl.removeAttribute('src');
+
 		// remove container from DOM & clear inline style
-		doc.body[removeEl](container);
+		document.body[removeEl](container);
 		container[removeEl](displayElement);
 		changeCSS(container, '');
-
-		// clear src of displayElement (or iframe if display el is iframe container)
-		(displayElement === iframeContainer
-			? iframeSiteVid
-			: displayElement
-		).removeAttribute('src');
+		changeCSS(displayElement, '');
 
 		// remove caption
 		toggleCaption(false);
@@ -692,7 +735,12 @@
 	}
 
 	// style helper functions
-	function changeCSS(element, newStyle) {
-		element.style.cssText = newStyle;
+	function changeCSS(ref, newStyle) {
+		var style = ref.style;
+
+		style.cssText = newStyle;
 	}
-})();
+
+	return BigPicture;
+
+}());

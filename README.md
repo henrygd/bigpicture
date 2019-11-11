@@ -2,7 +2,7 @@
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-Lightweight (3.75 KB gzip) and framework independent JavaScript image / video viewer.
+3.7 kB gzip vanilla JavaScript image / video viewer.
 
 Supports Youtube, Vimeo, and direct video links.
 
@@ -220,7 +220,7 @@ BigPicture({
 
 ## Change dimensions of embed / youtube / vimeo
 
-By default, embeds are displayed in 16:9 aspect at a maximum of 1600px by 900px. To change this, supply an array with width and height in pixels. Default is `[1600, 900]`.
+By default, embeds are displayed in 16:9 aspect at a maximum of 1920px by 1080px. To change this, supply an array with width and height in pixels. Default is `[1920, 1080]`.
 
 ```javascript
 BigPicture({

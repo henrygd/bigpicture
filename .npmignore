@@ -1,5 +1,4 @@
 example_page
-build.sh
 yarn.lock
 shrinkwrap.yaml
 pnpm-lock.yaml
