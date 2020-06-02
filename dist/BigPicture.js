@@ -372,6 +372,7 @@ var BigPicture = (function () {
 	}
 
 	function makeGallery(gallery, position) {
+		var galleryAttribute = opts.galleryAttribute || 'data-bp';
 		if (Array.isArray(gallery)) {
 			// is array of images
 			galleryPosition = position || 0;
@@ -381,7 +382,7 @@ var BigPicture = (function () {
 			// is element selector or nodelist
 			galleryEls = [].slice.call(
 				typeof gallery === 'string'
-					? document.querySelectorAll((gallery + " [data-bp]"))
+					? document.querySelectorAll((gallery + " [" + galleryAttribute + "]"))
 					: gallery
 			);
 			// find initial gallery position
@@ -391,7 +392,7 @@ var BigPicture = (function () {
 			// make gallery object w/ els / src / caption
 			galleryEls = galleryEls.map(function (el) { return ({
 				el: el,
-				src: el.getAttribute('data-bp'),
+				src: el.getAttribute(galleryAttribute),
 				caption: el.getAttribute('data-caption'),
 			}); });
 		}

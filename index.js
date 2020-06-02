@@ -371,6 +371,7 @@ function makeVidSrc(source) {
 }
 
 function makeGallery(gallery, position) {
+	var galleryAttribute = opts.galleryAttribute || 'data-bp';
 	if (Array.isArray(gallery)) {
 		// is array of images
 		galleryPosition = position || 0;
@@ -380,7 +381,7 @@ function makeGallery(gallery, position) {
 		// is element selector or nodelist
 		galleryEls = [].slice.call(
 			typeof gallery === 'string'
-				? document.querySelectorAll((gallery + " [data-bp]"))
+				? document.querySelectorAll((gallery + " [" + galleryAttribute + "]"))
 				: gallery
 		);
 		// find initial gallery position
@@ -390,7 +391,7 @@ function makeGallery(gallery, position) {
 		// make gallery object w/ els / src / caption
 		galleryEls = galleryEls.map(function (el) { return ({
 			el: el,
-			src: el.getAttribute('data-bp'),
+			src: el.getAttribute(galleryAttribute),
 			caption: el.getAttribute('data-caption'),
 		}); });
 	}
