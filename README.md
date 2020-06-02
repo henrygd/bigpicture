@@ -110,6 +110,8 @@ BigPicture({
 
 Add a `data-bp` attribute to your elements with the image you want to open, and pass a selector string or NodeList to the function. The string should specify a container which has `data-bp` elements somewhere inside, whereas the NodeList should be the elements themselves.
 
+##### The attribute name can be overridden with the `galleryAttribute` option as of 2.4.0. For instance, `galleryAttribute: 'src'` would open the thumbs in the example below, and the `data-bp` attributes would be unnecessary.
+
 ```html
 <div id="image_container">
 	<img src="photo1_thumb.jpg" data-bp="photo1.jpg" class="example" />
@@ -137,7 +139,7 @@ BigPicture({
 Alternatively, you can pass in an array of objects. The gallery will go through these in order. Here's example code for the unsplash gallery on the [demo site](https://henrygd.me/bigpicture):
 
 ```javascript
-var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function(user) {
+var unsplashImages = ['meiying', 'clemono2', 'heftiba'].map(function (user) {
 	return {
 		src: 'https://source.unsplash.com/user/' + user + '/daily',
 		// caption: 'This image is from unsplash'
@@ -181,21 +183,21 @@ To display a caption, add a `data-caption` attribute with the desired text or HT
 // example of how scrolling can be disabled using callbacks
 BigPicture({
 	el: e.target,
-	animationStart: function() {
+	animationStart: function () {
 		// executed immediately before open animation starts
 		document.documentElement.style.overflowY = 'hidden'
 		document.body.style.overflowY = 'scroll'
 	},
-	animationEnd: function() {
+	animationEnd: function () {
 		// executed immediately after open animation finishes
 		console.log('it has opened')
 	},
-	onClose: function() {
+	onClose: function () {
 		// executed immediately after close animation finishes
 		document.documentElement.style.overflowY = 'auto'
 		document.body.style.overflowY = 'auto'
 	},
-	onChangeImage: function(props) {
+	onChangeImage: function (props) {
 		// executed on gallery image change
 		console.log('gallery image changed', props)
 	},
@@ -233,7 +235,7 @@ You may override the default error alert for images, audio, and direct video lin
 ```javascript
 BigPicture({
 	el: e.target,
-	onError: function() {
+	onError: function () {
 		console.log('there was an error')
 	},
 })
