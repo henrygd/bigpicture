@@ -110,7 +110,7 @@ BigPicture({
 
 Add a `data-bp` attribute to your elements with the image you want to open, and pass a selector string or NodeList to the function. The string should specify a container which has `data-bp` elements somewhere inside, whereas the NodeList should be the elements themselves.
 
-##### The attribute name can be overridden with the `galleryAttribute` option as of 2.4.0. For instance, `galleryAttribute: 'src'` would open the thumbs in the example below, and the `data-bp` attributes would be unnecessary.
+The attribute name can be overridden with the `galleryAttribute` option as of 2.4.0. For instance, `galleryAttribute: 'src'` would open the thumbs in the example below, and the `data-bp` attributes would be unnecessary.
 
 ```html
 <div id="image_container">
