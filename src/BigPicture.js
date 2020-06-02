@@ -107,7 +107,7 @@ const appendEl = 'appendChild'
 const createEl = 'createElement'
 const removeEl = 'removeChild'
 
-export default options => {
+export default (options) => {
 	// initialize called on initial open to create elements / style / event handlers
 	initialized || initialize()
 
@@ -196,7 +196,7 @@ function initialize() {
 		el.innerHTML =
 			'<svg viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>'
 		changeCSS(el, style)
-		el.onclick = e => {
+		el.onclick = (e) => {
 			e.stopPropagation()
 			updateGallery(direction)
 		}
@@ -221,7 +221,7 @@ function initialize() {
 		container.ontouchstart = ({ changedTouches }) => {
 			startX = changedTouches[0].pageX
 		}
-		container.ontouchmove = e => {
+		container.ontouchmove = (e) => {
 			e.preventDefault()
 		}
 		container.ontouchend = ({ changedTouches }) => {
@@ -312,7 +312,7 @@ function initialize() {
 		}
 	})
 	// prevent scrolling with arrow keys if gallery open
-	document.addEventListener('keydown', e => {
+	document.addEventListener('keydown', (e) => {
 		const usedKeys = [37, 38, 39, 40]
 		if (galleryOpen && ~usedKeys.indexOf(e.keyCode)) {
 			e.preventDefault()
@@ -322,7 +322,7 @@ function initialize() {
 	// trap focus within conainer while open
 	document.addEventListener(
 		'focus',
-		e => {
+		(e) => {
 			if (isOpen && !container.contains(e.target)) {
 				e.stopPropagation()
 				closeButton.focus()
@@ -348,7 +348,7 @@ function getRect() {
 function makeVidSrc(source) {
 	if (Array.isArray(source)) {
 		displayElement = displayVideo.cloneNode()
-		source.forEach(src => {
+		source.forEach((src) => {
 			const source = document[createEl]('SOURCE')
 			source.src = src
 			source.type = `video/${src.match(/.(\w+)$/)[1]}`
@@ -378,7 +378,7 @@ function makeGallery(gallery, position) {
 		galleryPosition =
 			position === 0 || position ? position : elIndex !== -1 ? elIndex : 0
 		// make gallery object w/ els / src / caption
-		galleryEls = galleryEls.map(el => ({
+		galleryEls = galleryEls.map((el) => ({
 			el,
 			src: el.getAttribute('data-bp'),
 			caption: el.getAttribute('data-caption'),
@@ -445,7 +445,7 @@ function updateGallery(movement) {
 
 	// load images before and after for quicker scrolling through pictures
 	;[galleryPosition - 1, galleryPosition, galleryPosition + 1].forEach(
-		position => {
+		(position) => {
 			// normalize position
 			position = Math.max(0, Math.min(position, galleryLength))
 			// cancel if image has already been preloaded
