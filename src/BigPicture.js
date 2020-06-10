@@ -176,6 +176,11 @@ export default (options) => {
 	// add container to page
 	container[appendEl](displayElement)
 	document.body[appendEl](container)
+	return {
+		close,
+		next: () => updateGallery(1),
+		prev: () => updateGallery(-1),
+	}
 }
 
 // create all needed methods / store dom elements on first use
@@ -303,7 +308,7 @@ function initialize() {
 
 	// close container on escape key press and arrow buttons for gallery
 	document.addEventListener('keyup', ({ keyCode }) => {
-		keyCode === 27 && isOpen && close(container)
+		keyCode === 27 && isOpen && close()
 		if (galleryOpen) {
 			keyCode === 39 && updateGallery(1)
 			keyCode === 37 && updateGallery(-1)
@@ -653,7 +658,7 @@ function open(err) {
 
 // close active display element
 function close(e) {
-	const target = e.target
+	const target = e ? e.target : container
 	const clickEls = [
 		caption,
 		captionHideButton,
@@ -666,7 +671,7 @@ function close(e) {
 	]
 
 	// blur to hide close button focus style
-	target && target.blur()
+	target.blur()
 
 	// don't close if one of the clickEls was clicked or container is already closing
 	if (isClosing || ~clickEls.indexOf(target)) {
