@@ -13,8 +13,7 @@
 	},
 	"release-it": {
 		"hooks": {
-			"after:bump": "npm run build",
-			"after:release": "npm run deploy"
+			"after:bump": "npm run build"
 		}
 	},
 	"repository": {
