@@ -177,6 +177,11 @@ var BigPicture = (function () {
 		// add container to page
 		container[appendEl](displayElement);
 		document.body[appendEl](container);
+		return {
+			close: close,
+			next: function () { return updateGallery(1); },
+			prev: function () { return updateGallery(-1); },
+		}
 	}
 
 	// create all needed methods / store dom elements on first use
@@ -310,7 +315,7 @@ var BigPicture = (function () {
 		document.addEventListener('keyup', function (ref) {
 			var keyCode = ref.keyCode;
 
-			keyCode === 27 && isOpen && close(container);
+			keyCode === 27 && isOpen && close();
 			if (galleryOpen) {
 				keyCode === 39 && updateGallery(1);
 				keyCode === 37 && updateGallery(-1);
@@ -662,7 +667,7 @@ var BigPicture = (function () {
 
 	// close active display element
 	function close(e) {
-		var target = e.target;
+		var target = e ? e.target : container;
 		var clickEls = [
 			caption,
 			captionHideButton,
@@ -674,7 +679,7 @@ var BigPicture = (function () {
 			loadingIcon ];
 
 		// blur to hide close button focus style
-		target && target.blur();
+		target.blur();
 
 		// don't close if one of the clickEls was clicked or container is already closing
 		if (isClosing || ~clickEls.indexOf(target)) {
