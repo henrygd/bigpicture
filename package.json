@@ -1,6 +1,6 @@
 {
 	"name": "bigpicture",
-	"version": "2.5.0",
+	"version": "2.5.1",
 	"description": "Lightweight image and video viewer, supports youtube / vimeo",
 	"main": "index.js",
 	"scripts": {

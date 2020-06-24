@@ -160,6 +160,9 @@ var BigPicture = (function () {
 		} else if (options.vidSrc) {
 			// if direct video link
 			toggleLoadingIcon(true);
+			if (options.dimensions) {
+				changeCSS(displayVideo, ("width:" + (options.dimensions[0]) + "px"));
+			}
 			makeVidSrc(options.vidSrc);
 			checkMedia('video');
 		} else {
