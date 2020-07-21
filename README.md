@@ -1,12 +1,17 @@
-# ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture.js
+# ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture.js [![npm][npm-image]][npm-url] [![File Size][size-image]][cdn-url]
+
+[npm-image]: https://badgen.net/npm/v/bigpicture
+[npm-url]: https://www.npmjs.com/package/bigpicture
+[size-image]: https://badgen.net/badgesize/gzip/henrygd/bigpicture/master/dist/BigPicture.min.js
+[cdn-url]: https://cdn.jsdelivr.net/npm/bigpicture/dist/BigPicture.min.js
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-3.7 kB gzip vanilla JavaScript image / video viewer. Doesn't sit on the DOM when inactive.
+Vanilla JavaScript image / video viewer. Doesn't sit on the DOM when inactive.
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
 
-## Instructions
+## Installation
 
 Install via package manager or add a script from the [dist](dist) directory to your page. [CDN links are available via jsDelivr](https://www.jsdelivr.com/package/npm/bigpicture?path=dist).
 
@@ -30,7 +35,65 @@ Or with a script tag:
 
 No additional CSS file is neccesary.
 
-When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start and an optional second parameter depending on what you want to do. Examples below use `e.target` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
+## Usage
+
+When you want to open something, pass an object to `BigPicture` containing the element from which you want the animation to start, and other optional parameters depending on what you want to do. Examples below use `e.target` to refer to the trigger element being interacted with in the context of an event handler. You can use a different element if you want (for example, different buttons could be set up to open videos from the same central showcase element).
+
+If your trigger element is an image or an element with a background image, you can open it directly by passing only `el`.
+
+### Options
+
+```js
+BigPicture({
+	// element from which animation starts (required)
+	el: e.target,
+	// image url
+	imgSrc: 'https://yourimage.jpg',
+	// video src (String) or sources (Array)
+	vidSrc: ['https://yourvideo.mp4', 'https://yourvideo.webm'],
+	// iframe embed URL
+	iframeSrc: 'https://youriframe.html',
+	// vimeo ID
+	vimeoSrc: '119287310',
+	// youtube ID
+	ytSrc: 'z_PeaHVcohg',
+	// use youtube-nocookie
+	ytNoCookie: false,
+	// audio URL
+	audio: 'https://youraudio.mp3',
+	// see below for more gallery options
+	gallery: '#image_container',
+	// attribute used to find gallery elements
+	galleryAttribute: 'data-bp',
+	// set custom dimensions for embeds / videos
+	dimensions: [1920, 1080],
+	// show or hide default loading indicator
+	noLoader: false,
+	// open animation callback
+	animationStart: () => {},
+	// open animation callback
+	animationEnd: () => {},
+	// close callback
+	onClose: () => {},
+	// gallery image change callback
+	onChangeImage: () => {},
+})
+```
+
+Assign to variable for more control
+
+```javascript
+var bp = BigPicture({...})
+
+// close
+bp.close()
+
+// next gallery image
+bp.next()
+
+// previous gallery image
+bp.prev()
+```
 
 ### Remote video file
 
@@ -93,16 +156,6 @@ BigPicture({
 BigPicture({
 	el: e.target,
 	imgSrc: 'https://yourimage.jpg',
-})
-```
-
-### Local images & background images
-
-If your trigger element is an image or an element with a background image, you can open it directly by passing it alone.
-
-```javascript
-BigPicture({
-	el: e.target,
 })
 ```
 
