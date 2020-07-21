@@ -529,7 +529,12 @@ function createIframe() {
 
 	// create appropriate url
 	if (opts.ytSrc) {
-		url = `${prefix}www.youtube.com/embed/${siteVidID}?html5=1&rel=0&playsinline=1&${suffix}`
+		var domain = "www.youtube.com";
+		if(opts.ytNoCookie) {
+			domain = "www.youtube-nocookie.com"
+		}
+
+		url = `${prefix}${domain}/embed/${siteVidID}?html5=1&rel=0&playsinline=1&${suffix}`
 	} else if (opts.vimeoSrc) {
 		url = `${prefix}player.vimeo.com/video/${siteVidID}?${suffix}`
 	} else if (opts.iframeSrc) {
