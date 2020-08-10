@@ -654,7 +654,9 @@ function open(err) {
 	changeCSS(container, "opacity:1;pointer-events:auto");
 
 	// set animationEnd callback to run after animation ends (cleared if container closed)
-	animationEnd = setTimeout(animationEnd, 410);
+	if (animationEnd) {
+		animationEnd = setTimeout(animationEnd, 410);
+	}
 
 	isOpen = true;
 
