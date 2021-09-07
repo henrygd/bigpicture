@@ -208,6 +208,14 @@
 						BigPicture({
 							el: e.target,
 							gallery: '#image_container',
+							animationStart: function () {
+								document.documentElement.style.overflowY = 'hidden'
+								document.body.style.overflowY = 'scroll'
+							},
+							onClose: function () {
+								document.documentElement.style.overflowY = 'auto'
+								document.body.style.overflowY = 'auto'
+							},
 						})
 					})
 				}
