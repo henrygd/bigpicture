@@ -233,25 +233,19 @@ To display a caption, add a `data-caption` attribute with the desired text or HT
 `onChangeImage` runs when a gallery image is changed and provides useful data about the current image.
 
 ```javascript
-// example of how scrolling can be disabled using callbacks
+// example of how scrolling can be disabled using henrygd.me/hide-show-scroll
 BigPicture({
 	el: e.target,
-	animationStart: function () {
-		// executed immediately before open animation starts
-		document.documentElement.style.overflowY = 'hidden'
-		document.body.style.overflowY = 'scroll'
-	},
+	// animationStart executed immediately before open animation starts
+	animationStart: hideShowScroll.hide,
+	// animationEnd executed immediately after open animation finishes
 	animationEnd: function () {
-		// executed immediately after open animation finishes
 		console.log('it has opened')
 	},
-	onClose: function () {
-		// executed immediately after close animation finishes
-		document.documentElement.style.overflowY = 'auto'
-		document.body.style.overflowY = 'auto'
-	},
+	// onClose executed immediately after close animation finishes
+	onClose: hideShowScroll.show,
+	// onChangeImage executed on gallery image change
 	onChangeImage: function (props) {
-		// executed on gallery image change
 		console.log('gallery image changed', props)
 	},
 })
