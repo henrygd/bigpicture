@@ -188,7 +188,7 @@ function BigPicture (options) {
 
 // create all needed methods / store dom elements on first use
 function initialize() {
-	var startX;
+	var startX, isPinch;
 	// return close button elements
 	function createCloseButton(className) {
 		var el = document[createEl]('button');
@@ -223,28 +223,26 @@ function initialize() {
 	container.onclick = close;
 	closeButton = createCloseButton('bp-x');
 	container[appendEl](closeButton);
-	// gallery swipe listeners
-	if ('ontouchstart' in window) {
+	// gallery touch listeners
+	if ('ontouchend' in window && window.visualViewport) {
 		supportsTouch = true;
 		container.ontouchstart = function (ref) {
+			var touches = ref.touches;
 			var changedTouches = ref.changedTouches;
 
+			isPinch = touches.length > 1;
 			startX = changedTouches[0].pageX;
-		};
-		container.ontouchmove = function (e) {
-			e.preventDefault();
 		};
 		container.ontouchend = function (ref) {
 			var changedTouches = ref.changedTouches;
 
-			if (!galleryOpen) {
-				return
+			if (galleryOpen && !isPinch && window.visualViewport.scale <= 1) {
+				var distX = changedTouches[0].pageX - startX;
+				// swipe right
+				distX < -30 && updateGallery(1);
+				// swipe left
+				distX > 30 && updateGallery(-1);
 			}
-			var distX = changedTouches[0].pageX - startX;
-			// swipe right
-			distX < -30 && updateGallery(1);
-			// swipe left
-			distX > 30 && updateGallery(-1);
 		};
 	}
 
