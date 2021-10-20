@@ -27,6 +27,21 @@ var BigPicture = (function () {
 
 	// iframe to hold youtube / vimeo player
 	var iframeSiteVid;
+	
+	// specifies how to size the iframe
+	var iframeSize; 	// 'auto', 'content', callback
+
+	// callback to return the height of an iframe
+	var iframeSizeFn;
+
+	// callback when iframe loads
+	var iframeLoad;
+	
+	// specifies a resize delay in ms
+	var resizeDelay;
+
+	// a pointer to the iframe window after it loads
+	var iframeWin;
 
 	// store requested image source
 	var imgSrc;
@@ -137,6 +152,18 @@ var BigPicture = (function () {
 		// set caption if provided
 		captionContent = el.getAttribute('data-caption');
 
+		// iframeLoad is called when the iframe is loaded
+		iframeLoad = opts.iframeLoad && typeof(opts.iframeLoad) === 'function' ? opts.iframeLoad : null;
+
+		// iframe size option
+		iframeSize = opts.iframeSize ? opts.iframeSize : 'auto';
+
+		// store the iframe size callback to make it easy to call
+		iframeSizeFn = typeof(iframeSize) === 'function' ? iframeSize : null;
+
+		// support a delay in calling the resize function
+		resizeDelay = opts.resizeDelay && typeof(opts.resizeDelay) === 'number' && opts.resizeDelay > 0 ? opts.resizeDelay : 0;
+
 		if (options.gallery) {
 			makeGallery(options.gallery, options.position);
 		} else if (siteVidID || options.iframeSrc) {
@@ -184,6 +211,9 @@ var BigPicture = (function () {
 			close: close,
 			next: function () { return updateGallery(1); },
 			prev: function () { return updateGallery(-1); },
+			resize: function () {
+				doResize()
+			}
 		}
 	}
 
@@ -294,7 +324,14 @@ var BigPicture = (function () {
 		iframeSiteVid = document[createEl]('IFRAME');
 		iframeSiteVid.setAttribute('allowfullscreen', true);
 		iframeSiteVid.allow = 'autoplay; fullscreen';
-		iframeSiteVid.onload = function () { return iframeContainer[removeEl](loadingIcon); };
+		iframeSiteVid.onload = function () { 
+			iframeWin = this.contentWindow;
+			if (iframeLoad) {
+				iframeLoad.call(iframeWin);
+			}
+			setTimeout(updateIframeDimensions, resizeDelay);
+			iframeContainer[removeEl](loadingIcon);
+		};
 		changeCSS(
 			iframeSiteVid,
 			'border:0;position:absolute;height:100%;width:100%;left:0;top:0'
@@ -305,11 +342,16 @@ var BigPicture = (function () {
 		displayImage.onload = open;
 		displayImage.onerror = open.bind(null, 'image');
 
+		var resizeTimer = null;
 		window.addEventListener('resize', function () {
-			// adjust loader position on window resize
-			galleryOpen || (isLoading && toggleLoadingIcon(true));
-			// adjust iframe dimensions
-			displayElement === iframeContainer && updateIframeDimensions();
+			if (resizeTimer) {
+				clearTimeout(resizeTimer);
+			}
+			if (resizeDelay) {
+				resizeTimer = setTimeout(doResize, resizeDelay);
+			} else {
+				doResize();
+			}
 		});
 
 		// close container on escape key press and arrow buttons for gallery
@@ -346,6 +388,13 @@ var BigPicture = (function () {
 
 		// all done
 		initialized = true;
+	}
+
+	function doResize () {
+		// adjust loader position on window resize
+		galleryOpen || (isLoading && toggleLoadingIcon(true));
+		// adjust iframe dimensions
+		displayElement === iframeContainer && updateIframeDimensions();
 	}
 
 	// return transform style to make full size display el match trigger el size
@@ -576,7 +625,31 @@ var BigPicture = (function () {
 			height = width * iframeAspect;
 		}
 
-		iframeContainer.style.cssText += "width:" + width + "px;height:" + height + "px;";
+		// set the width first so that the iframe height has a chance to change
+		iframeContainer.style.width = width.toString() + "px";
+
+		if (iframeWin) {
+			// if the iframe was loaded, see if the caller
+			// wants to set the height of the iframe dynamically
+			var iframeHeight = 0,
+				minHeight = 50;
+			if (iframeSizeFn) {
+				iframeHeight = parseFloat(iframeSizeFn.call(iframeWin));
+				//window.console.log('callback height: ' + iframeHeight);
+				if (isNaN(iframeHeight)) {
+					iframeHeight = 0;
+				}
+			}
+			else if (iframeSize === 'content') {
+				iframeHeight = iframeWin.document.body.scrollHeight;
+			}
+			if (iframeHeight > minHeight) {
+				// the iframe height was set
+				height = iframeHeight;
+			}
+		}
+
+		iframeContainer.style.height = height.toString() + "px";
 	}
 
 	// timeout to check video status while loading
@@ -741,6 +814,10 @@ var BigPicture = (function () {
 		opts.onClose && opts.onClose();
 
 		isClosing = isLoading = false;
+	}
+
+	function resizeIframe() {
+
 	}
 
 	// style helper functions
