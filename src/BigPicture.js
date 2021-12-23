@@ -169,7 +169,7 @@ export default (options) => {
 		displayElement = displayImage
 		// get img source or element background image
 		displayElement.src =
-			el.tagName === 'IMG'
+			el.tagName.toUpperCase() === 'IMG'
 				? el.src
 				: window
 						.getComputedStyle(el)
@@ -193,16 +193,16 @@ function initialize() {
 	function createCloseButton(className) {
 		const el = document[createEl]('button')
 		el.className = className
-		el.innerHTML =
-			'<svg viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>'
+		innerHTML(el,
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M28 24L47 5a3 3 0 1 0-4-4L24 20 5 1a3 3 0 1 0-4 4l19 19L1 43a3 3 0 1 0 4 4l19-19 19 19a3 3 0 0 0 4 0v-4L28 24z"/></svg>')
 		return el
 	}
 
 	function createArrowSymbol(direction, style) {
 		const el = document[createEl]('button')
 		el.className = 'bp-lr'
-		el.innerHTML =
-			'<svg viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>'
+		innerHTML(el,
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" height="70" fill="#fff"><path d="M88.6 121.3c.8.8 1.8 1.2 2.9 1.2s2.1-.4 2.9-1.2a4.1 4.1 0 0 0 0-5.8l-51-51 51-51a4.1 4.1 0 0 0-5.8-5.8l-54 53.9a4.1 4.1 0 0 0 0 5.8l54 53.9z"/></svg>')
 		changeCSS(el, style)
 		el.onclick = (e) => {
 			e.stopPropagation()
@@ -212,13 +212,13 @@ function initialize() {
 	}
 
 	// add style - if you want to tweak, run through beautifier
-	const style = document[createEl]('STYLE')
+	const style = document[createEl]('style')
 	style.innerHTML =
 		'#bp_caption,#bp_container{bottom:0;left:0;right:0;position:fixed;opacity:0}#bp_container>*,#bp_loader{position:absolute;right:0;z-index:10}#bp_container,#bp_caption,#bp_container svg{pointer-events:none}#bp_container{top:0;z-index:9999;background:rgba(0,0,0,.7);opacity:0;transition:opacity .35s}#bp_loader{top:0;left:0;bottom:0;display:flex;align-items:center;cursor:wait;background:0;z-index:9}#bp_loader svg{width:50%;max-width:300px;max-height:50%;margin:auto;animation:bpturn 1s infinite linear}#bp_aud,#bp_container img,#bp_sv,#bp_vid{user-select:none;max-height:96%;max-width:96%;top:0;bottom:0;left:0;margin:auto;box-shadow:0 0 3em rgba(0,0,0,.4);z-index:-1}#bp_sv{background:#111}#bp_sv svg{width:66px}#bp_caption{font-size:.9em;padding:1.3em;background:rgba(15,15,15,.94);color:#fff;text-align:center;transition:opacity .3s}#bp_aud{width:650px;top:calc(50% - 20px);bottom:auto;box-shadow:none}#bp_count{left:0;right:auto;padding:14px;color:rgba(255,255,255,.7);font-size:22px;cursor:default}#bp_container button{position:absolute;border:0;outline:0;background:0;cursor:pointer;transition:all .1s}#bp_container>.bp-x{padding:0;height:41px;width:41px;border-radius:100%;top:8px;right:14px;opacity:.8;line-height:1}#bp_container>.bp-x:focus,#bp_container>.bp-x:hover{background:rgba(255,255,255,.2)}.bp-x svg,.bp-xc svg{height:21px;width:20px;fill:#fff;vertical-align:top;}.bp-xc svg{width:16px}#bp_container .bp-xc{left:2%;bottom:100%;padding:9px 20px 7px;background:#d04444;border-radius:2px 2px 0 0;opacity:.85}#bp_container .bp-xc:focus,#bp_container .bp-xc:hover{opacity:1}.bp-lr{top:50%;top:calc(50% - 130px);padding:99px 0;width:6%;background:0;border:0;opacity:.4;transition:opacity .1s}.bp-lr:focus,.bp-lr:hover{opacity:.8}@keyframes bpf{50%{transform:translatex(15px)}100%{transform:none}}@keyframes bpl{50%{transform:translatex(-15px)}100%{transform:none}}@keyframes bpfl{0%{opacity:0;transform:translatex(70px)}100%{opacity:1;transform:none}}@keyframes bpfr{0%{opacity:0;transform:translatex(-70px)}100%{opacity:1;transform:none}}@keyframes bpfol{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(-70px)}}@keyframes bpfor{0%{opacity:1;transform:none}100%{opacity:0;transform:translatex(70px)}}@keyframes bpturn{0%{transform:none}100%{transform:rotate(360deg)}}@media (max-width:600px){.bp-lr{font-size:15vw}}'
 	document.head[appendEl](style)
 
 	// create container element
-	container = document[createEl]('DIV')
+	container = document[createEl]('div')
 	container.id = 'bp_container'
 	container.onclick = close
 	closeButton = createCloseButton('bp-x')
@@ -242,10 +242,10 @@ function initialize() {
 	}
 
 	// create display image element
-	displayImage = document[createEl]('IMG')
+	displayImage = document[createEl]('img')
 
 	// create display video element
-	displayVideo = document[createEl]('VIDEO')
+	displayVideo = document[createEl]('video')
 	displayVideo.id = 'bp_vid'
 	displayVideo.setAttribute('playsinline', true)
 	displayVideo.controls = true
@@ -262,7 +262,7 @@ function initialize() {
 	galleryCounter.id = 'bp_count'
 
 	// create caption elements
-	caption = document[createEl]('DIV')
+	caption = document[createEl]('div')
 	caption.id = 'bp_caption'
 	captionHideButton = createCloseButton('bp-xc')
 	captionHideButton.onclick = toggleCaption.bind(null, false)
@@ -276,16 +276,16 @@ function initialize() {
 	leftArrowBtn = createArrowSymbol(-1, 'left:0;right:auto')
 
 	// create loading icon element
-	loadingIcon = document[createEl]('DIV')
+	loadingIcon = document[createEl]('div')
 	loadingIcon.id = 'bp_loader'
-	loadingIcon.innerHTML =
-		'<svg viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>'
+	innerHTML(loadingIcon,
+		'<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32" fill="#fff" opacity=".8"><path d="M16 0a16 16 0 0 0 0 32 16 16 0 0 0 0-32m0 4a12 12 0 0 1 0 24 12 12 0 0 1 0-24" fill="#000" opacity=".5"/><path d="M16 0a16 16 0 0 1 16 16h-4A12 12 0 0 0 16 4z"/></svg>')
 	// create youtube / vimeo container
-	iframeContainer = document[createEl]('DIV')
+	iframeContainer = document[createEl]('div')
 	iframeContainer.id = 'bp_sv'
 
 	// create iframe to hold youtube / vimeo player
-	iframeSiteVid = document[createEl]('IFRAME')
+	iframeSiteVid = document[createEl]('iframe')
 	iframeSiteVid.setAttribute('allowfullscreen', true)
 	iframeSiteVid.allow = 'autoplay; fullscreen'
 	iframeSiteVid.onload = () => iframeContainer[removeEl](loadingIcon)
@@ -340,6 +340,19 @@ function initialize() {
 	initialized = true
 }
 
+function innerHTML(element, string)
+{
+	try {
+		while(element.firstChild)
+		{ element.removeChild(element.firstChild); }
+		const parse = Range.prototype.createContextualFragment.bind(document.createRange());
+		element.appendChild(parse(child));
+	}
+	catch {
+		element.innerHTML = string;
+	}
+}
+
 // return transform style to make full size display el match trigger el size
 function getRect() {
 	const { top, left, width, height } = el.getBoundingClientRect()
@@ -354,7 +367,7 @@ function makeVidSrc(source) {
 	if (Array.isArray(source)) {
 		displayElement = displayVideo.cloneNode()
 		source.forEach((src) => {
-			const source = document[createEl]('SOURCE')
+			const source = document[createEl]('source')
 			source.src = src
 			source.type = `video/${src.match(/.(\w+)$/)[1]}`
 			displayElement[appendEl](source)
@@ -398,7 +411,7 @@ function makeGallery(gallery, position) {
 	if (galleryEls.length > 1) {
 		// if length is greater than one, add gallery stuff
 		container[appendEl](galleryCounter)
-		galleryCounter.innerHTML = `${galleryPosition + 1}/${galleryEls.length}`
+		innerHTML(galleryCounter, `${galleryPosition + 1}/${galleryEls.length}`)
 		if (!supportsTouch) {
 			// add arrows if device doesn't support touch
 			container[appendEl](rightArrowBtn)
@@ -458,7 +471,7 @@ function updateGallery(movement) {
 			if (preloadedImages[position]) return
 			const src = galleryEls[position].src
 			// create image for preloadedImages
-			const img = document[createEl]('IMG')
+			const img = document[createEl]('img')
 			img.addEventListener('load', addToImgCache.bind(null, src))
 			img.src = src
 			preloadedImages[position] = img
@@ -511,7 +524,7 @@ function changeGalleryImage(movement) {
 		}
 	}
 	// update counter
-	galleryCounter.innerHTML = `${galleryPosition + 1}/${galleryEls.length}`
+	innerHTML(galleryCounter, `${galleryPosition + 1}/${galleryEls.length}`)
 	// show / hide caption
 	toggleCaption(galleryEls[galleryPosition].caption)
 	// execute onChangeImage callback
