@@ -61,6 +61,10 @@ BigPicture({
 	ytNoCookie: false,
 	// audio URL
 	audio: 'https://youraudio.mp3',
+	// muting can help with autoplay
+	muted: false,
+	// volume, a floating point between 0 and 1
+	volume: 1,
 	// see below for more gallery options
 	gallery: '#image_container',
 	// attribute used to find gallery elements
