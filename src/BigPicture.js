@@ -155,12 +155,20 @@ export default (options) => {
 		toggleLoadingIcon(true)
 		displayElement = displayAudio
 		displayElement.src = options.audio
+		displayElement.muted = options.muted
+		if ( typeof options.volume === "number") {
+			displayElement.volume = options.volume
+		}
 		checkMedia('audio file')
 	} else if (options.vidSrc) {
 		// if direct video link
 		toggleLoadingIcon(true)
 		if (options.dimensions) {
 			changeCSS(displayVideo, `width:${options.dimensions[0]}px`)
+		}
+		displayVideo.muted = options.muted
+		if ( typeof options.volume === "number") {
+			displayVideo.volume = options.volume
 		}
 		makeVidSrc(options.vidSrc)
 		checkMedia('video')
