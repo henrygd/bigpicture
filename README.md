@@ -80,7 +80,7 @@ BigPicture({
 })
 ```
 
-Assign to variable for more control
+The function returns an object with a few helpful properties / methods.
 
 ```javascript
 var bp = BigPicture({...})
@@ -93,11 +93,17 @@ bp.next()
 
 // previous gallery image
 bp.prev()
+
+// access to active display element (img, video, iframe wrapper div)
+bp.display
+
+// options of active instance
+bp.opts
 ```
 
-### Remote video file
+## Sources
 
-Multiple sources supported as of 1.4.0
+### Remote video file
 
 ```javascript
 BigPicture({
@@ -159,7 +165,7 @@ BigPicture({
 })
 ```
 
-### Galleries
+## Galleries
 
 Add a `data-bp` attribute to your elements with the image you want to open, and pass a selector string or NodeList to the function. The string should specify a container which has `data-bp` elements somewhere inside, whereas the NodeList should be the elements themselves.
 
@@ -273,6 +279,15 @@ BigPicture({
 	ytSrc: 'X2lkvrMa27c',
 	dimensions: [1226, 900],
 })
+```
+
+Dimensions can also be updated on the fly.
+
+```javascript
+var bp = BigPicture({...})
+
+bp.opts.dimensions = [500, 500]
+bp.updateDimensions()
 ```
 
 ## Error handling
