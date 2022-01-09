@@ -182,6 +182,9 @@ var BigPicture = (function () {
 		document.body[appendEl](container);
 		return {
 			close: close,
+			opts: opts,
+			updateDimensions: updateDimensions,
+			display: displayElement,
 			next: function () { return updateGallery(1); },
 			prev: function () { return updateGallery(-1); },
 		}
@@ -309,7 +312,7 @@ var BigPicture = (function () {
 			// adjust loader position on window resize
 			galleryOpen || (isLoading && toggleLoadingIcon(true));
 			// adjust iframe dimensions
-			displayElement === iframeContainer && updateIframeDimensions();
+			displayElement === iframeContainer && updateDimensions();
 		});
 
 		// close container on escape key press and arrow buttons for gallery
@@ -548,12 +551,12 @@ var BigPicture = (function () {
 		// set iframe src to url
 		iframeSiteVid.src = url;
 
-		updateIframeDimensions();
+		updateDimensions();
 
 		setTimeout(open, 9);
 	}
 
-	function updateIframeDimensions() {
+	function updateDimensions() {
 		var height;
 		var width;
 

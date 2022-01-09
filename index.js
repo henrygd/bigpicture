@@ -181,6 +181,9 @@ function BigPicture (options) {
 	document.body[appendEl](container);
 	return {
 		close: close,
+		opts: opts,
+		updateDimensions: updateDimensions,
+		display: displayElement,
 		next: function () { return updateGallery(1); },
 		prev: function () { return updateGallery(-1); },
 	}
@@ -308,7 +311,7 @@ function initialize() {
 		// adjust loader position on window resize
 		galleryOpen || (isLoading && toggleLoadingIcon(true));
 		// adjust iframe dimensions
-		displayElement === iframeContainer && updateIframeDimensions();
+		displayElement === iframeContainer && updateDimensions();
 	});
 
 	// close container on escape key press and arrow buttons for gallery
@@ -547,12 +550,12 @@ function createIframe() {
 	// set iframe src to url
 	iframeSiteVid.src = url;
 
-	updateIframeDimensions();
+	updateDimensions();
 
 	setTimeout(open, 9);
 }
 
-function updateIframeDimensions() {
+function updateDimensions() {
 	var height;
 	var width;
 
