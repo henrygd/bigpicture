@@ -1,4 +1,4 @@
-# ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture.js [![npm][npm-image]][npm-url] [![File Size][size-image]][cdn-url]
+# ![logo](https://i.imgur.com/4O1IXsG.png) BigPicture [![npm][npm-image]][npm-url] [![File Size][size-image]][cdn-url]
 
 [npm-image]: https://badgen.net/npm/v/bigpicture
 [npm-url]: https://www.npmjs.com/package/bigpicture
@@ -7,7 +7,9 @@
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
-Vanilla JavaScript image / video viewer. Doesn't sit on the DOM when inactive.
+Vanilla JavaScript image / video viewer meant to be as lightweight and easy to use as possible.
+
+A slightly larger option with more features is in development. To test it out or provide feedback see https://github.com/henrygd/bigger-picture
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
 
@@ -243,13 +245,13 @@ To display a caption, add a `data-caption` attribute with the desired text or HT
 BigPicture({
 	el: e.target,
 	// animationStart executed immediately before open animation starts
-	animationStart: hideShowScroll.hide,
+	animationStart: hideScroll,
 	// animationEnd executed immediately after open animation finishes
 	animationEnd: function () {
 		console.log('it has opened')
 	},
 	// onClose executed immediately after close animation finishes
-	onClose: hideShowScroll.show,
+	onClose: showScroll,
 	// onChangeImage executed on gallery image change
 	onChangeImage: function (props) {
 		console.log('gallery image changed', props)
