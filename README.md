@@ -71,6 +71,8 @@ BigPicture({
 	dimensions: [1920, 1080],
 	// show or hide default loading indicator
 	noLoader: false,
+	// customize the overlay color (any valid css color value)
+	overlayColor: rgba(0,0,0,.8)
 	// open animation callback
 	animationStart: () => {},
 	// open animation callback
