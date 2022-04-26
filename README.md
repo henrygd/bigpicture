@@ -5,11 +5,11 @@
 [size-image]: https://badgen.net/badgesize/gzip/henrygd/bigpicture/master/dist/BigPicture.min.js
 [cdn-url]: https://cdn.jsdelivr.net/npm/bigpicture/dist/BigPicture.min.js
 
+📢 **Note: In 2022 I released a successor library to this one, with features like responsive images, zooming, HTML modals, and various improvements. Please check out the Bigger Picture [demo site](https://biggerpicture.henrygd.me) or [GitHub repository](https://github.com/henrygd/bigger-picture).**
+
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
 Vanilla JavaScript image / video viewer meant to be as lightweight and easy to use as possible.
-
-A slightly larger option with more features is in development. To test it out or provide feedback see https://github.com/henrygd/bigger-picture
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
 
