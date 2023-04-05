@@ -5,8 +5,6 @@
 [size-image]: https://badgen.net/badgesize/gzip/henrygd/bigpicture/master/dist/BigPicture.min.js
 [cdn-url]: https://cdn.jsdelivr.net/npm/bigpicture/dist/BigPicture.min.js
 
-📢 **Note: In 2022 I released a successor library to this one, with features like responsive images, zooming, HTML modals, and various improvements. Please check out the Bigger Picture [demo site](https://biggerpicture.henrygd.me) or [GitHub repository](https://github.com/henrygd/bigger-picture).**
-
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
 
 Vanilla JavaScript image / video viewer meant to be as lightweight and easy to use as possible.
@@ -320,3 +318,5 @@ All images found on Unsplash
 Towers of Pfeiffer video by [Grant Porter](https://vimeo.com/grantporter) (CC-BY)
 
 Music by [Nordgroove](https://icons8.com/music/author/nordgroove) via [icons8](https://icons8.com/music)
+
+📢 **Note: I made another lightbox library with features like responsive images, zooming, HTML modals, and various improvements over this one. Please check out the Bigger Picture [demo site](https://biggerpicture.henrygd.me) or [GitHub repository](https://github.com/henrygd/bigger-picture).**
