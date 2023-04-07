@@ -6,7 +6,6 @@
 [cdn-url]: https://cdn.jsdelivr.net/npm/bigpicture/dist/BigPicture.min.js
 
 ![Example page screenshot](https://i.imgur.com/7T6dnN3.gif)
-
 Vanilla JavaScript image / video viewer meant to be as lightweight and easy to use as possible.
 
 ##### [Check out the example page here](https://henrygd.me/bigpicture)
