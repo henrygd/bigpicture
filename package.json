@@ -3,6 +3,7 @@
 	"version": "2.6.3",
 	"description": "Lightweight image and video viewer, supports youtube / vimeo",
 	"main": "index.js",
+	"types": "index.d.ts",
 	"module": "src/BigPicture.js",
 	"scripts": {
 		"build": "rollup -c",
